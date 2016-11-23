@@ -1,8 +1,6 @@
 .DS_Store
+.gradle
 .idea
+build
 moodini.iml
-target
-dependency-reduced-pom.xml
 nb-configuration.xml
-src/main/resources/rebel.xml
-src/main/resources/assets/bower_components

@@ -1,0 +1,81 @@
+/*
+ * Moodini
+ * Copyright (C) 2016 Marcus Fihlon
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+group 'ch.fihlon.moodini'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'jacoco'
+apply plugin: 'com.github.kt3k.coveralls'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
+    }
+}
+
+war {
+    archiveName 'moodini.war'
+}
+
+jacocoTestReport {
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports after running tests."
+    additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
+    reports {
+        xml.enabled = true // coveralls plugin depends on xml format report
+        html.enabled = true
+    }
+}
+
+dependencies {
+    providedCompile (
+            'javax:javaee-api:7.0'                              // amazing microservice framework
+    )
+    compile (
+            'com.google.code.gson:gson:2.8.0',                  // easy to use JSON parser
+            'com.google.guava:guava:20.0',                      // tons of utilities
+            'org.projectlombok:lombok:1.16.10',                 // clean-up your source files
+            'org.slf4j:slf4j-api:1.7.21',                       // log framework abstraction
+            'org.slf4j:slf4j-simple:1.7.21',                    // just logs to the console
+            'org.zalando.phrs:jersey-media-json-gson:0.1',      // Jersey GSON entity providers support
+            'pl.setblack:airomem-core:1.0.5'                    // Prevayler based persistence engine
+    )
+    testCompile (
+            'fish.payara.blue.extras:payara-micro:4.1.1.164',   // embedded application server for integration tests
+            'io.rest-assured:rest-assured:3.0.1',               // Java DSL for easy testing of REST services
+            'junit:junit:4.12',                                 // THE testing framework
+            'org.hamcrest:java-hamcrest:2.0.0.0',               // write flexible assertions
+            'org.mockito:mockito-core:1.10.19',                 // best mocking framework ever (PowerMock: no v2!)
+            'org.needle4j:needle4j:2.3',                        // testing Java EE components
+            'org.powermock:powermock-api-mockito:1.6.6',        // Ugly: Mock static stuff
+            'org.powermock:powermock-core:1.6.6',               // Ugly: Mock static stuff
+            'org.powermock:powermock-module-junit4:1.6.6'       // Ugly: Mock static stuff
+    )
+}
