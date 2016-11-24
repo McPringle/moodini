@@ -20,11 +20,13 @@ package ch.fihlon.moodini.server.business.question.control;
 import ch.fihlon.moodini.server.PersistenceManager;
 import ch.fihlon.moodini.server.business.question.entity.Answer;
 import ch.fihlon.moodini.server.business.question.entity.Question;
-import ch.fihlon.moodini.server.exception.NotFoundException;
 import pl.setblack.airomem.core.SimpleController;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.inject.Singleton;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,14 +36,16 @@ import java.util.Optional;
 @Singleton
 public class QuestionService {
 
-    private final SimpleController<QuestionRepository> controller;
+    private SimpleController<QuestionRepository> controller;
 
-    /**
-     * This constructor should only be called once because this class is a {@link Singleton}!
-     */
-    public QuestionService() {
-        controller = PersistenceManager.createSimpleController(Question.class, QuestionRepository::new);
-        Runtime.getRuntime().addShutdownHook(new Thread(controller::close));
+    @PostConstruct
+    public void setupResources() {
+        this.controller = PersistenceManager.createSimpleController(Question.class, QuestionRepository::new);
+    }
+
+    @PreDestroy
+    public void cleanupResources() {
+        this.controller.close();
     }
 
     /**

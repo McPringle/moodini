@@ -17,44 +17,26 @@
  */
 package ch.fihlon.moodini.server.business.question.entity;
 
-import ch.fihlon.moodini.server.business.question.entity.Question.QuestionBuilder;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
-/**
- * This entity class is representing a question.
- */
 @Value
-@SuppressWarnings("PMD.UnusedPrivateField")
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(toBuilder = true)
-@JsonDeserialize(builder = QuestionBuilder.class)
 public class Question implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private static final int MAX_TEXT_LENGTH = 100;
 
     private Long questionId;
 
     private Long version;
 
-    @NotEmpty
-    @Length(max = MAX_TEXT_LENGTH)
+    @NotNull
     private String text;
-
-    /**
-     * This is the builder for the {@link Question}.
-     */
-    @JsonPOJOBuilder(withPrefix = "")
-    public static final class QuestionBuilder {
-    }
 
 }

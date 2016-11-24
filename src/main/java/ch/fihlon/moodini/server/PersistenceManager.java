@@ -18,33 +18,23 @@
 package ch.fihlon.moodini.server;
 
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import pl.setblack.airomem.core.SimpleController;
 
+import java.io.File;
 import java.io.Serializable;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.function.Supplier;
 
-/**
- * This utility class is responsible for creating the controllers to connect to
- * the persistence store.
- */
+@Slf4j
 @UtilityClass
 public class PersistenceManager {
 
-    private static final Path DATA_DIRECTORY = Paths.get("moodini");
-
-    /**
-     * Create a {@link SimpleController} for the specified entity using the specified repository constructor.
-     *
-     * @param clazz the entity class
-     * @param constructor the constructor of the repository class
-     * @param <T> the type of the entity, must extend {@link Serializable}
-     * @return a {@link SimpleController} for the entity repository
-     */
     public static <T extends Serializable> SimpleController<T> createSimpleController(
             final Class<? extends Serializable> clazz, final Supplier<T> constructor) {
-        final String dir = DATA_DIRECTORY.resolve(clazz.getName()).toString();
+        final String dir = String.format(".moodini%s%s", //NON-NLS
+                File.separator, clazz.getName());
+        log.info("Using persistence store '{}' for entity '{}'.", //NON-NLS
+                dir, clazz.getName());
         return SimpleController.loadOptional(dir, constructor);
     }
 

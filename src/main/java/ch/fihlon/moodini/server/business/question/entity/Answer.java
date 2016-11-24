@@ -17,16 +17,9 @@
  */
 package ch.fihlon.moodini.server.business.question.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonValue;
-
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
-/**
- * This enum represents all possible answers for a vote.
- */
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Answer implements Serializable {
 
     // CHECKSTYLE DISABLE JavadocVariable FOR 5 LINES
@@ -47,7 +40,6 @@ public enum Answer implements Serializable {
      * 
      * @return the {@link String} representation of an {@link Answer}
      */
-    @JsonValue
     public String getAnswer() {
         return answer;
     }

@@ -19,10 +19,13 @@ package ch.fihlon.moodini.server.business.question.control;
 
 import ch.fihlon.moodini.server.business.question.entity.Answer;
 import ch.fihlon.moodini.server.business.question.entity.Question;
-import ch.fihlon.moodini.server.exception.MethodNotAllowedException;
-import ch.fihlon.moodini.server.exception.NotFoundException;
+import com.google.common.collect.ImmutableList;
+import lombok.NonNull;
 
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.io.Serializable;
 import java.util.ConcurrentModificationException;
 import java.util.List;
@@ -47,7 +50,7 @@ class QuestionRepository implements Serializable {
 
     private final AtomicLong questionSeq = new AtomicLong(0);
 
-    Question create(@NotNull final Question question) {
+    Question create(@NonNull final Question question) {
         final Long questionId = questionSeq.incrementAndGet();
         final Long version = (long) question.hashCode();
         final Question questionToCreate = question.toBuilder()
@@ -58,13 +61,34 @@ class QuestionRepository implements Serializable {
         return questionToCreate;
     }
 
-    Question update(@NotNull final Question question) {
-        if (!getAnswers(question.getQuestionId()).isEmpty()) {
-            throw new MethodNotAllowedException("It is not allowed to update questions with votes!");
+    List<Question> readAll() {
+        return ImmutableList.copyOf(
+                questions.values().stream()
+                    .sorted(comparingLong(Question::getQuestionId))
+                    .collect(toList()));
+    }
+
+    Optional<Question> read(@NonNull final Long questionId) {
+        return Optional.ofNullable(questions.get(questionId));
+    }
+
+    Optional<Question> readLatest() {
+        return questions.values().stream()
+                .max(comparingLong(Question::getQuestionId));
+    }
+
+    Question update(@NonNull final Question question) {
+        final Long questionId = question.getQuestionId();
+        final Question previousQuestion = read(questionId).orElse(null);
+        if (previousQuestion == null) {
+            return null; // non-existing questions can't be updated
         }
-        final Question previousQuestion = read(question.getQuestionId()).orElseThrow(NotFoundException::new);
         if (!previousQuestion.getVersion().equals(question.getVersion())) {
             throw new ConcurrentModificationException("You tried to update a question that was modified concurrently!");
+        }
+        if (!getAnswers(question.getQuestionId()).isEmpty()) {
+            throw new WebApplicationException("It is not allowed to update questions with votes!",
+                    Response.Status.METHOD_NOT_ALLOWED); // TODO JAX-RS classes should not be used at this level!
         }
         final Long version = (long) question.hashCode();
         final Question questionToUpdate = question.toBuilder()
@@ -74,30 +98,16 @@ class QuestionRepository implements Serializable {
         return questionToUpdate;
     }
 
-    Optional<Question> read(@NotNull final Long questionId) {
-        return Optional.ofNullable(questions.get(questionId));
-    }
-
-    List<Question> readAll() {
-        return questions.values().stream()
-                .sorted(comparingLong(Question::getQuestionId))
-                .collect(toList());
-    }
-
-    Optional<Question> readLatest() {
-        return questions.values().stream()
-                .max(comparingLong(Question::getQuestionId));
-    }
-
-    void delete(@NotNull final Long questionId) {
+    void delete(@NonNull final Long questionId) {
         if (!getAnswers(questionId).isEmpty()) {
-            throw new MethodNotAllowedException("It is not allowed to delete questions with votes!");
+            throw new WebApplicationException("It is not allowed to update questions with votes!",
+                    Response.Status.METHOD_NOT_ALLOWED); // TODO JAX-RS classes should not be used at this level!
         }
         questions.remove(questionId);
     }
 
-    Long vote(@NotNull final Long questionId,
-              @NotNull final Answer answer) {
+    Long vote(@NonNull final Long questionId,
+              @NonNull final Answer answer) {
         if (!questions.containsKey(questionId)) {
             throw new NotFoundException();
         }
@@ -105,8 +115,8 @@ class QuestionRepository implements Serializable {
         return counter.incrementAndGet();
     }
 
-    private AtomicLong getCounter(@NotNull final Long questionId,
-                                  @NotNull final Answer answer) {
+    private AtomicLong getCounter(@NonNull final Long questionId,
+                                  @NonNull final Answer answer) {
         final Map<Answer, AtomicLong> answers = getAnswers(questionId);
         if (!answers.containsKey(answer)) {
             synchronized (answers) {
@@ -116,7 +126,7 @@ class QuestionRepository implements Serializable {
         return answers.get(answer);
     }
 
-    private Map<Answer, AtomicLong> getAnswers(@NotNull final Long questionId) {
+    private Map<Answer, AtomicLong> getAnswers(@NonNull final Long questionId) {
         if (!votes.containsKey(questionId)) {
             synchronized (votes) {
                 votes.putIfAbsent(questionId, new ConcurrentHashMap<>());

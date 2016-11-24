@@ -17,7 +17,6 @@
  */
 package ch.fihlon.moodini.server.business.question.boundary;
 
-import ch.fihlon.moodini.server.Injector;
 import ch.fihlon.moodini.server.business.question.control.QuestionService;
 import ch.fihlon.moodini.server.business.question.entity.Question;
 import com.google.inject.AbstractModule;

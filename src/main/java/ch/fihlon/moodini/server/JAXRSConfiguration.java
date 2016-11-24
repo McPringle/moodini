@@ -15,19 +15,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.fihlon.moodini.server.exception;
+package ch.fihlon.moodini.server;
 
-/**
- * This implementation of an exception is mapped to a HTTP status code of "404 NOT FOUND".
- */
-public class NotFoundException extends AbstractStatusCodeException {
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
 
-    private static final int STATUS_CODE = 404;
-
-    /**
-     * This constructor creates a {@link NotFoundException} without a message.
-     */
-    public NotFoundException() {
-        super(STATUS_CODE);
-    }
+@ApplicationPath("/api")
+public class JAXRSConfiguration extends Application {
 }
