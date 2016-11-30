@@ -31,8 +31,8 @@ public class PersistenceManager {
 
     public static <T extends Serializable> SimpleController<T> createSimpleController(
             final Class<? extends Serializable> clazz, final Supplier<T> constructor) {
-        final String dir = String.format(".moodini%s%s", //NON-NLS
-                File.separator, clazz.getName());
+        final String dir = String.format(".moodini%sdata%s%s", //NON-NLS
+                File.separator, File.separator, clazz.getName());
         log.info("Using persistence store '{}' for entity '{}'.", //NON-NLS
                 dir, clazz.getName());
         return SimpleController.loadOptional(dir, constructor);
