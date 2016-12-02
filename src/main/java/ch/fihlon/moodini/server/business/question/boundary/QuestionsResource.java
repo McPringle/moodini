@@ -18,13 +18,15 @@
 package ch.fihlon.moodini.server.business.question.boundary;
 
 import ch.fihlon.moodini.server.business.question.control.QuestionService;
-import ch.fihlon.moodini.server.business.question.entity.Answer;
 import ch.fihlon.moodini.server.business.question.entity.Question;
 import lombok.NonNull;
 
 import javax.inject.Inject;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.*;
+import javax.validation.Valid;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -32,7 +34,6 @@ import javax.ws.rs.core.UriInfo;
 import java.io.File;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @Path("questions")
 @Produces(MediaType.APPLICATION_JSON)
@@ -46,7 +47,7 @@ public class QuestionsResource {
     }
 
     @POST
-    public Response create(@NonNull final Question question,
+    public Response create(@NonNull @Valid final Question question,
                            @NonNull @Context final UriInfo info) {
         final Question createdQuestion = questionService.create(question);
         final Long questionId = createdQuestion.getQuestionId();
@@ -55,58 +56,9 @@ public class QuestionsResource {
     }
 
     @GET
-    public Response list() {
-        List<Question> questions = questionService.readAll();
+    public Response read() {
+        List<Question> questions = questionService.read();
         return Response.ok(questions).build();
-    }
-
-    @GET
-    @Path("{id}")
-    public Response read(@NonNull @PathParam("id") final Long questionId) {
-        final Optional<Question> question = questionService.read(questionId);
-        if (question.isPresent()) {
-            return Response.ok(question).build();
-        }
-        throw new NotFoundException(String.format("Question with id '%d' not found.", questionId));
-    }
-
-    @GET
-    @Path("latest")
-    public Response latest() {
-        final Question question = questionService.readLatest();
-        return Response.ok(question).build();
-    }
-
-    @PUT
-    @Path("{id}")
-    public Response update(@NonNull @PathParam("id") final Long questionId,
-                           @NonNull final Question question,
-                           @NonNull @Context final UriInfo info) {
-        read(questionId); // only update existing questions
-        final Question questionToUpdate = question.toBuilder()
-                .questionId(questionId)
-                .build();
-        final Question updatedQuestion = questionService.update(question);
-        final URI uri = info.getAbsolutePath();
-        return Response.ok(updatedQuestion).header("Location", uri.toString()).build();
-    }
-
-    @DELETE
-    @Path("{id}")
-    public Response delete(@NonNull @PathParam("id") final Long questionId) {
-        read(questionId); // only delete existing questions
-        questionService.delete(questionId);
-        return Response.noContent().build();
-    }
-
-    @POST
-    @Path("{id}/vote")
-    public Response vote(@NonNull @PathParam("id") final Long questionId,
-                         @NonNull final Answer answer,
-                         @NonNull @Context final UriInfo info) {
-        questionService.vote(questionId, answer);
-        final URI uri = info.getAbsolutePath();
-        return Response.created(uri).build();
     }
 
 }
