@@ -22,7 +22,6 @@ import ch.fihlon.moodini.server.business.question.entity.Question;
 import com.google.common.collect.ImmutableList;
 import lombok.NonNull;
 
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
