@@ -85,7 +85,7 @@ public class QuestionService {
      *
      * @return a {@link List} of all {@link Question}s
      */
-    public List<Question> readAll() {
+    public List<Question> read() {
         return controller.readOnly().readAll();
     }
 
