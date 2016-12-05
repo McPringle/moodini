@@ -20,6 +20,7 @@ group 'ch.fihlon.moodini'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'kotlin'
 apply plugin: 'war'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
@@ -37,6 +38,7 @@ buildscript {
     }
     dependencies {
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.1.1'
     }
 }
 
@@ -77,5 +79,8 @@ dependencies {
             'org.powermock:powermock-api-mockito:1.6.6',        // Ugly: Mock static stuff
             'org.powermock:powermock-core:1.6.6',               // Ugly: Mock static stuff
             'org.powermock:powermock-module-junit4:1.6.6'       // Ugly: Mock static stuff
+    )
+    compile (
+            'org.jetbrains.kotlin:kotlin-stdlib-jre8:1.1.1'     // Kotlin standard library
     )
 }
