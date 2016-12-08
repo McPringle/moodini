@@ -19,129 +19,94 @@ package ch.fihlon.moodini.server.business.question.boundary;
 
 import ch.fihlon.moodini.server.business.question.control.QuestionService;
 import ch.fihlon.moodini.server.business.question.entity.Question;
-import com.google.inject.AbstractModule;
-import io.vertx.core.DeploymentOptions;
-import io.vertx.core.MultiMap;
-import io.vertx.core.Vertx;
-import io.vertx.core.json.Json;
-import io.vertx.core.json.JsonObject;
-import io.vertx.ext.unit.Async;
-import io.vertx.ext.unit.TestContext;
-import io.vertx.ext.unit.junit.VertxUnitRunner;
-import org.junit.After;
-import org.junit.Before;
+import com.google.common.collect.ImmutableList;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
+import org.needle4j.annotation.ObjectUnderTest;
+import org.needle4j.junit.NeedleRule;
 
-import javax.validation.constraints.NotNull;
-import java.io.IOException;
-import java.net.ServerSocket;
+import javax.inject.Inject;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
 
-import static com.jayway.restassured.RestAssured.port;
-import static java.util.Collections.singletonList;
-import static org.mockito.Matchers.any;
+import static java.lang.Boolean.TRUE;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-/**
- * This is the unit test for the class {@link QuestionsVerticle}.
- */
-@RunWith(VertxUnitRunner.class)
-public class QuestionsVerticleTest {
+public class QuestionsResourceTest {
 
-    private static final String QUESTION_TEXT = "Do you like testing?";
-    private static final Long QUESTION_ID = 1L;
-    private static final Long QUESTION_VERSION = 42L;
-    private static final String APPLICATION_JSON = "application/json";
-    private static final String CONTENT_TYPE = "Content-Type";
-    private static final String CONTENT_LENGTH = "Content-Length";
-    private static final String LOCATION = "Location";
-    private static final String HOSTNAME = "localhost";
-    private static final String API_ENDPOINT = "/api/questions";
-    private static final int SC_OK = 200;
-    private static final int SC_CREATED = 201;
+    @Rule
+    public NeedleRule needleRule = new NeedleRule();
 
-    private Vertx vertx;
+    @Inject
+    private QuestionService questionService;
 
-    @Mock
-    private QuestionService serviceMock;
+    @Inject
+    private UriInfo info;
 
-    @Before
-    public void setUp(@NotNull final TestContext context) throws IOException {
-        final Question answerQuestion = Question.builder()
-                .text(QUESTION_TEXT)
-                .questionId(QUESTION_ID)
-                .version(QUESTION_VERSION)
+    @ObjectUnderTest(postConstruct = true)
+    private QuestionsResource questionsResource;
+
+    @Test
+    public void createQuestion() throws URISyntaxException {
+        // arrange
+        final Question testQuestion = Question.builder()
+                .text("Test Question")
                 .build();
-        serviceMock = mock(QuestionService.class);
-        when(serviceMock.create(any(Question.class))).thenReturn(answerQuestion);
-        when(serviceMock.readAll()).thenReturn(singletonList(answerQuestion));
-        Injector.setModule(new AbstractModule() {
-            @Override
-            protected void configure() {
-                bind(QuestionService.class).toInstance(serviceMock);
-            }
-        });
+        when(questionService.create(testQuestion)).thenReturn(testQuestion.toBuilder().questionId(1L).version(1L).build());
+        final UriBuilder uriBuilder = mock(UriBuilder.class);
+        final URI uri = new URI("/questions/1");
+        when(uriBuilder.path((String) anyObject())).thenReturn(uriBuilder);
+        when(uriBuilder.build()).thenReturn(uri);
+        when(info.getAbsolutePathBuilder()).thenReturn(uriBuilder);
 
-        vertx = Vertx.vertx();
-        final ServerSocket socket = new ServerSocket(0);
-        port = socket.getLocalPort();
-        socket.close();
-        final DeploymentOptions options = new DeploymentOptions()
-                .setConfig(new JsonObject().put("http.port", port));
-        vertx.deployVerticle(QuestionsVerticle.class.getName(), options, context.asyncAssertSuccess());
-    }
+        // act
+        final Response response = questionsResource.create(testQuestion, info);
 
-    @After
-    public void tearDown(@NotNull final TestContext context) {
-        vertx.close(context.asyncAssertSuccess());
-        Injector.resetModule();
+        // assert
+        assertThat(response.getStatus(), is(201));
+        assertThat(response.getLocation(), is(uri));
     }
 
     @Test
-    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-    public void testCreate(@NotNull final TestContext context) {
-        final Async async = context.async();
-        final String json = Json.encodePrettily(Question.builder().text(QUESTION_TEXT).build());
-        final String length = Integer.toString(json.length());
-        vertx.createHttpClient().post(port, HOSTNAME, API_ENDPOINT)
-            .putHeader(CONTENT_TYPE, APPLICATION_JSON)
-            .putHeader(CONTENT_LENGTH, length)
-            .handler(response -> {
-                context.assertEquals(response.statusCode(), SC_CREATED);
-                context.assertTrue(response.headers().get(LOCATION)
-                        .startsWith(API_ENDPOINT + "/"));
-                final MultiMap headers = response.headers();
-                final String contentType = headers.get(CONTENT_TYPE);
-                context.assertTrue(contentType.contains(APPLICATION_JSON));
-                response.bodyHandler(body -> {
-                    final Question question = Json.decodeValue(body.toString(), Question.class);
-                    context.assertEquals(question.getText(), QUESTION_TEXT);
-                    context.assertEquals(question.getQuestionId(), QUESTION_ID);
-                    context.assertEquals(question.getVersion(), QUESTION_VERSION);
-                    async.complete();
-                });
-            })
-            .write(json)
-            .end();
+    public void readAllQuestions() {
+        // arrange
+        final Question testQuestion = Question.builder()
+                .questionId(1L)
+                .text("Test Question")
+                .build();
+        when(questionService.read()).thenReturn(ImmutableList.of(testQuestion));
+
+        // act
+        final Response response = questionsResource.read();
+
+        // assert
+        final List<Question> questions = (List<Question>) response.getEntity();
+        assertThat(questions.size(), is(1));
+        assertThat(questions, contains(testQuestion));
+        assertThat(response.getStatus(), is(200));
     }
 
     @Test
-    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-    public void testReadAll(@NotNull final TestContext context) {
-        final Async async = context.async();
+    public void readEmptyQuestion() {
+        // arrange
+        when(questionService.read()).thenReturn(ImmutableList.of());
 
-        vertx.createHttpClient().getNow(port, HOSTNAME, API_ENDPOINT,
-            response -> {
-                context.assertEquals(response.statusCode(), SC_OK);
-                context.assertTrue(response.headers().get(CONTENT_TYPE)
-                        .contains(APPLICATION_JSON));
-                response.bodyHandler(body -> {
-                    context.assertTrue(body.toString().contains(QUESTION_TEXT));
-                    async.complete();
-                });
-            });
+        // act
+        final Response response = questionsResource.read();
+
+        // assert
+        final List<Question> questions = (List<Question>) response.getEntity();
+        assertThat(questions.isEmpty(), is(TRUE));
+        assertThat(response.getStatus(), is(200));
     }
 
 }
