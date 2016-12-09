@@ -17,17 +17,16 @@
  */
 package ch.fihlon.moodini.server.business.question.entity;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Value;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Value
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(toBuilder = true)
+@EqualsAndHashCode(exclude={"version"})
 public class Question implements Serializable {
 
     private static final long serialVersionUID = 1L;
