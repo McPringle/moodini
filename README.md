@@ -3,6 +3,8 @@
 
 [![Build Status](https://travis-ci.org/McPringle/moodini.svg?branch=master)](https://travis-ci.org/McPringle/moodini) [![Coverage Status](https://coveralls.io/repos/github/McPringle/moodini/badge.svg?branch=master)](https://coveralls.io/github/McPringle/moodini?branch=master) [![Stories in Ready](https://badge.waffle.io/McPringle/moodini.png?label=ready&title=ready)](http://waffle.io/McPringle/moodini) [![gitmoji](https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg)](https://gitmoji.carloscuesta.me)
 
+**An easy to use mood application. For more information please take a look at our [project website](https://moodini.ch/).**
+
 *Copyright (C) 2016 Marcus Fihlon*
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
