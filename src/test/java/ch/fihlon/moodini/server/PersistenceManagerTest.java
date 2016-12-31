@@ -24,6 +24,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import pl.setblack.airomem.core.SimpleController;
 
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -58,6 +60,19 @@ public class PersistenceManagerTest {
         assertThat("The PersistenceManager should return the mock object.", simpleController, is(controllerMock));
         verifyStatic(times(1));
         SimpleController.loadOptional(anyObject(), anyObject());
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testUtilityClassConstructor() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        // arrange
+        Constructor<PersistenceManager> constructor;
+        constructor = PersistenceManager.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+
+        // act
+        constructor.newInstance();
+
+        // assert
     }
 
 }
