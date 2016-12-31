@@ -18,6 +18,7 @@
 package ch.fihlon.moodini.server.business.question.boundary;
 
 import ch.fihlon.moodini.server.business.question.control.QuestionService;
+import ch.fihlon.moodini.server.business.question.entity.Answer;
 import ch.fihlon.moodini.server.business.question.entity.Question;
 import org.junit.Rule;
 import org.junit.Test;
@@ -153,6 +154,24 @@ public class QuestionResourceTest {
         questionResource.delete(1L);
 
         // assert
+    }
+
+    @Test
+    public void vote() throws URISyntaxException {
+        // arrange
+        final Question testQuestion = Question.builder()
+                .questionId(1L)
+                .text("Test Question")
+                .build();
+        when(questionService.read(1L)).thenReturn(Optional.of(testQuestion));
+        when(info.getAbsolutePath()).thenReturn(new URI("/questions/1/vote"));
+
+        // act
+        final Response response = questionResource.vote(testQuestion.getQuestionId(), Answer.FINE, info);
+
+        // assert
+        assertThat(response.getStatus(), is(201));
+        assertThat(response.getLocation().getPath(), endsWith("/questions/1/vote"));
     }
 
 }
