@@ -6,6 +6,10 @@ jdk:
 services:
   - docker
 
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
 
 after_success:
   - docker build -t mcpringle/moodini .
