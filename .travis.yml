@@ -6,11 +6,8 @@ jdk:
 services:
   - docker
 
-addons:
-  sonarqube: true
 
 after_success:
-  - ./gradlew jacocoTestReport coveralls
   - docker build -t mcpringle/moodini .
   - docker login -u $DOCKER_USER -p $DOCKER_PASS
   - docker push mcpringle/moodini
@@ -23,5 +20,4 @@ env:
   - secure: LxIIOZwlEiwfUnlmTO7G7EjaI7Y8//VnAZRvANEaFHJYJgI6Qo04cJU5mBDQX6IKjhkSbKr0oeazEG6uEoHn6mDe864rhs0e6FR7KqUYW2jyUaSoMB8dAMdRPnVToH+Zjfe1qsXiKxc4ZCAaynp+gvYiEvrrIHfg02/c1IdANcqxUtDIhtRQBHChU2dHdMHBe/r6C2rr6RQuiAfGd9nAs7fYAVlFmb0y5/olTr4txUCw7YJ3xwOzemOgLdUf93aKeV+iw3iRQS3UNMK3os2Ta0Uh3i86ZCFRpxWA+U1stT4XsFkpzECQKOiN/MtX0Z73aqOsioJebms3g7H/DROJPY9zeEN+yAN0Y3nEvVojCCJfDHfqJgh/TFjg5Pp9nA4Xjnym2cNbhE2Zca7UrIEy9267qIHibECzAmdHV+1mJbXGKuqGNktOCfFURNjqpBJhrWIjTv3lQkDAYFyz06VFMxEsUDFtmvepuxDj/4EbkZiVfXRuep8qmzGLgDdqu9hHgK6AWFyjKNmicn40xgLjChPeA8M1dqcj3TvCqwAqqKNmXLtoxDBmHSlRwpkCG3yuvmOQ9nNNxc/Sry8y5jacCCb5xyr7GB+yZKI55WAuPRYRtOiA3EjKuTi0UBL7CvBk4/Hr3Y/nyzEIO838dYxbt27BBDcTE1Y6prNLuqlzmmo=
 
 script:
-  - ./gradlew check
-  - sonar-scanner -Dsonar.login=$SONAR_TOKEN
+  - ./gradlew check jacocoTestReport coveralls sonarqube -Dsonar.login=$SONAR_TOKEN
