@@ -55,7 +55,7 @@ public class QuestionService {
      * @return the new {@link Question}
      */
     public Question create(@NotNull final Question question) {
-        return controller.executeAndQuery((ctrl) -> ctrl.create(question));
+        return controller.executeAndQuery(ctrl -> ctrl.create(question));
     }
 
     /**
@@ -67,7 +67,7 @@ public class QuestionService {
     public Question update(@NotNull final Question question) {
         final Long questionId = question.getQuestionId();
         read(questionId).orElseThrow(NotFoundException::new);
-        return controller.executeAndQuery((ctrl) -> ctrl.update(question));
+        return controller.executeAndQuery(ctrl -> ctrl.update(question));
     }
 
     /**
@@ -106,7 +106,7 @@ public class QuestionService {
      */
     public void delete(@NotNull final Long questionId) {
         read(questionId).orElseThrow(NotFoundException::new);
-        controller.execute((ctrl) -> ctrl.delete(questionId));
+        controller.execute(ctrl -> ctrl.delete(questionId));
     }
 
     /**
@@ -119,6 +119,6 @@ public class QuestionService {
     public Long vote(@NotNull final Long questionId,
                      @NotNull final Answer answer) {
         read(questionId).orElseThrow(NotFoundException::new);
-        return controller.executeAndQuery((ctrl) -> ctrl.vote(questionId, answer));
+        return controller.executeAndQuery(ctrl -> ctrl.vote(questionId, answer));
     }
 }
