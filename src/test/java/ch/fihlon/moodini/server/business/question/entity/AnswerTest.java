@@ -31,27 +31,27 @@ public class AnswerTest {
 
     @Test
     public void getAnswerAmped() {
-        assertThat(ERROR_MESSAGE, Answer.AMPED.getAnswer(), is("Amped"));
+        assertThat(ERROR_MESSAGE, Answer.AMPED.getText(), is("Amped"));
     }
 
     @Test
     public void getAnswerGood() {
-        assertThat(ERROR_MESSAGE, Answer.GOOD.getAnswer(), is("Good"));
+        assertThat(ERROR_MESSAGE, Answer.GOOD.getText(), is("Good"));
     }
 
     @Test
     public void getAnswerFine() {
-        assertThat(ERROR_MESSAGE, Answer.FINE.getAnswer(), is("Fine"));
+        assertThat(ERROR_MESSAGE, Answer.FINE.getText(), is("Fine"));
     }
 
     @Test
     public void getAnswerMeh() {
-        assertThat(ERROR_MESSAGE, Answer.MEH.getAnswer(), is("Meh"));
+        assertThat(ERROR_MESSAGE, Answer.MEH.getText(), is("Meh"));
     }
 
     @Test
     public void getAnswerPissed() {
-        assertThat(ERROR_MESSAGE, Answer.PISSED.getAnswer(), is("Pissed"));
+        assertThat(ERROR_MESSAGE, Answer.PISSED.getText(), is("Pissed"));
     }
 
 }

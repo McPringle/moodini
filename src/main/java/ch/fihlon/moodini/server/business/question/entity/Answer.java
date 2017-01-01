@@ -29,10 +29,10 @@ public enum Answer implements Serializable {
     MEH("Meh"),
     PISSED("Pissed");
 
-    private String answer;
+    private String text;
 
-    Answer(@NotNull final String answer) {
-        this.answer = answer;
+    Answer(@NotNull final String text) {
+        this.text = text;
     }
 
     /**
@@ -40,7 +40,7 @@ public enum Answer implements Serializable {
      * 
      * @return the {@link String} representation of an {@link Answer}
      */
-    public String getAnswer() {
-        return answer;
+    public String getText() {
+        return text;
     }
 }
