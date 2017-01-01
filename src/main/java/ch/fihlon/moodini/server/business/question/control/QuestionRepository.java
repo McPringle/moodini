@@ -23,8 +23,6 @@ import com.google.common.collect.ImmutableList;
 import lombok.NonNull;
 
 import javax.ws.rs.NotFoundException;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
 import java.io.Serializable;
 import java.util.ConcurrentModificationException;
 import java.util.List;
@@ -86,8 +84,7 @@ class QuestionRepository implements Serializable {
             throw new ConcurrentModificationException("You tried to update a question that was modified concurrently!");
         }
         if (!getAnswers(question.getQuestionId()).isEmpty()) {
-            throw new WebApplicationException("It is not allowed to update questions with votes!",
-                    Response.Status.METHOD_NOT_ALLOWED); // TODO JAX-RS classes should not be used at this level!
+            throw new UnsupportedOperationException("It is not allowed to update questions with votes!");
         }
         final Long version = (long) question.hashCode();
         final Question questionToUpdate = question.toBuilder()
@@ -99,8 +96,7 @@ class QuestionRepository implements Serializable {
 
     void delete(@NonNull final Long questionId) {
         if (!getAnswers(questionId).isEmpty()) {
-            throw new WebApplicationException("It is not allowed to update questions with votes!",
-                    Response.Status.METHOD_NOT_ALLOWED); // TODO JAX-RS classes should not be used at this level!
+            throw new UnsupportedOperationException("It is not allowed to delete questions with votes!");
         }
         questions.remove(questionId);
     }

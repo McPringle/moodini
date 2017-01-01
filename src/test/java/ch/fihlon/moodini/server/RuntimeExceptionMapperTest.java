@@ -28,6 +28,7 @@ import java.util.ConcurrentModificationException;
 import static javax.ws.rs.core.Response.Status.ACCEPTED;
 import static javax.ws.rs.core.Response.Status.CONFLICT;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
+import static javax.ws.rs.core.Response.Status.METHOD_NOT_ALLOWED;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -61,6 +62,21 @@ public class RuntimeExceptionMapperTest {
         assertThat(response.getStatus(), is(NOT_FOUND.getStatusCode()));
         final JsonObject entity = (JsonObject) response.getEntity();
         assertThat(entity.getInt("status"), is(NOT_FOUND.getStatusCode()));
+        assertThat(entity.getString("message"), is("Test"));
+    }
+
+    @Test
+    public void handleUnsupportedOperationException() {
+        // arrange
+        final RuntimeException runtimeException = new RuntimeException(new UnsupportedOperationException("Test"));
+
+        // act
+        final Response response = new RuntimeExceptionMapper().toResponse(runtimeException);
+
+        // assert
+        assertThat(response.getStatus(), is(METHOD_NOT_ALLOWED.getStatusCode()));
+        final JsonObject entity = (JsonObject) response.getEntity();
+        assertThat(entity.getInt("status"), is(METHOD_NOT_ALLOWED.getStatusCode()));
         assertThat(entity.getString("message"), is("Test"));
     }
 

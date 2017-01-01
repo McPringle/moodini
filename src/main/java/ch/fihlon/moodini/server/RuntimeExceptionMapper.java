@@ -33,6 +33,7 @@ import java.util.ConcurrentModificationException;
 
 import static javax.ws.rs.core.Response.Status.CONFLICT;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
+import static javax.ws.rs.core.Response.Status.METHOD_NOT_ALLOWED;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 
 @Slf4j
@@ -51,6 +52,9 @@ public class RuntimeExceptionMapper implements ExceptionMapper<RuntimeException>
         }
         if (e instanceof NotFoundException) {
             return new ResponseData(NOT_FOUND, e.getMessage());
+        }
+        if (e instanceof UnsupportedOperationException) {
+            return new ResponseData(METHOD_NOT_ALLOWED, e.getMessage());
         }
         if (e instanceof WebApplicationException) {
             final WebApplicationException wae = (WebApplicationException) e;

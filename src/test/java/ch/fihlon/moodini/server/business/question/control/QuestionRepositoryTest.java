@@ -23,7 +23,6 @@ import lombok.NonNull;
 import org.junit.Test;
 
 import javax.ws.rs.NotFoundException;
-import javax.ws.rs.WebApplicationException;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Optional;
@@ -162,7 +161,7 @@ public class QuestionRepositoryTest {
         assertThat(updatedQuestion, is(nullValue()));
     }
 
-    @Test(expected = WebApplicationException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void updateWithVotes() {
         // arrange
         final QuestionRepository questionRepository = new QuestionRepository();
@@ -203,7 +202,7 @@ public class QuestionRepositoryTest {
         assertThat(questionRepository.read(1L), is(Optional.empty()));
     }
 
-    @Test(expected = WebApplicationException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void deleteQuestionWithVotes() {
         // arrange
         final QuestionRepository questionRepository = new QuestionRepository();
