@@ -19,6 +19,7 @@ package ch.fihlon.moodini.server;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -66,7 +67,7 @@ public class RuntimeExceptionMapper implements ExceptionMapper<RuntimeException>
         return createResponse(INTERNAL_SERVER_ERROR, e.getMessage());
     }
 
-    private Response createResponse(final Status status, final String message) {
+    private Response createResponse(@NotNull final Status status, @NotNull final String message) {
         final JsonObject entity = Json.createObjectBuilder()
                 .add("status", status.getStatusCode())
                 .add("message", message)

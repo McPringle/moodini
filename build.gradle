@@ -85,6 +85,7 @@ dependencies {
     compile (
             'com.google.code.gson:gson:2.8.0',                  // easy to use JSON parser
             'com.google.guava:guava:20.0',                      // tons of utilities
+            'org.jetbrains:annotations:15.0',                   // @NotNull and @Nullable annotations
             'org.projectlombok:lombok:1.16.10',                 // clean-up your source files
             'org.slf4j:slf4j-api:1.7.21',                       // log framework abstraction
             'org.slf4j:slf4j-simple:1.7.21',                    // just logs to the console

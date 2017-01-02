@@ -21,6 +21,7 @@ import ch.fihlon.moodini.server.business.question.entity.Answer;
 import ch.fihlon.moodini.server.business.question.entity.Question;
 import com.google.common.collect.ImmutableList;
 import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import javax.ws.rs.NotFoundException;
 import java.io.Serializable;
@@ -83,7 +84,7 @@ class QuestionRepository implements Serializable {
         if (!previousQuestion.getVersion().equals(question.getVersion())) {
             throw new ConcurrentModificationException("You tried to update a question that was modified concurrently!");
         }
-        if (!getAnswers(question.getQuestionId()).isEmpty()) {
+        if (hasAnswers(questionId)) {
             throw new UnsupportedOperationException("It is not allowed to update questions with votes!");
         }
         final Long version = (long) question.hashCode();
@@ -95,7 +96,7 @@ class QuestionRepository implements Serializable {
     }
 
     void delete(@NonNull final Long questionId) {
-        if (!getAnswers(questionId).isEmpty()) {
+        if (hasAnswers(questionId)) {
             throw new UnsupportedOperationException("It is not allowed to delete questions with votes!");
         }
         questions.remove(questionId);
@@ -110,8 +111,8 @@ class QuestionRepository implements Serializable {
         return counter.incrementAndGet();
     }
 
-    private AtomicLong getCounter(@NonNull final Long questionId,
-                                  @NonNull final Answer answer) {
+    private AtomicLong getCounter(@NotNull final Long questionId,
+                                  @NotNull final Answer answer) {
         final Map<Answer, AtomicLong> answers = getAnswers(questionId);
         if (!answers.containsKey(answer)) {
             synchronized (answers) {
@@ -121,12 +122,16 @@ class QuestionRepository implements Serializable {
         return answers.get(answer);
     }
 
-    private Map<Answer, AtomicLong> getAnswers(@NonNull final Long questionId) {
+    private Map<Answer, AtomicLong> getAnswers(@NotNull final Long questionId) {
         if (!votes.containsKey(questionId)) {
             synchronized (votes) {
                 votes.putIfAbsent(questionId, new ConcurrentHashMap<>());
             }
         }
         return votes.get(questionId);
+    }
+
+    private Boolean hasAnswers(@NotNull final Long questionId) {
+        return !getAnswers(questionId).isEmpty();
     }
 }
