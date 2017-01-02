@@ -46,7 +46,7 @@ public class RuntimeExceptionMapper implements ExceptionMapper<RuntimeException>
         return createResponse(handleException(e));
     }
 
-    private ResponseData handleException(@NonNull final Throwable e) {
+    private ResponseData handleException(final Throwable e) {
         if (e instanceof ConcurrentModificationException) {
             return new ResponseData(CONFLICT, e.getMessage());
         }
@@ -66,7 +66,7 @@ public class RuntimeExceptionMapper implements ExceptionMapper<RuntimeException>
         return new ResponseData(INTERNAL_SERVER_ERROR, e.getMessage());
     }
 
-    private Response createResponse(@NonNull ResponseData responseData) {
+    private Response createResponse(ResponseData responseData) {
         final JsonObject entity = Json.createObjectBuilder()
                 .add("status", responseData.getStatus().getStatusCode())
                 .add("message", responseData.getMessage())

@@ -35,6 +35,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class RuntimeExceptionMapperTest {
 
+    @Test(expected = NullPointerException.class)
+    public void handleNull() {
+        new RuntimeExceptionMapper().toResponse(null);
+    }
+
     @Test
     public void handleConcurrentModificationException() {
         // arrange
