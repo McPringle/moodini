@@ -235,6 +235,16 @@ public class QuestionRepositoryTest {
         // assert
     }
 
+    @Test(expected = NullPointerException.class)
+    public void voteWithNullQuestionId() {
+        new QuestionRepository().vote(null, Answer.FINE);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void voteWithNullAnswer() {
+        new QuestionRepository().vote(1L, null);
+    }
+
     @Test
     public void voteSuccess() {
         // arrange
