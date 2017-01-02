@@ -43,6 +43,16 @@ public class QuestionRepositoryTest {
         return questionRepository.create(question);
     }
 
+    @Test(expected = NullPointerException.class)
+    public void createWithNull() {
+        new QuestionRepository().create(null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void readWithNull() {
+        new QuestionRepository().read(null);
+    }
+
     @Test
     public void readByQuestionIdFound() {
         // arrange
@@ -107,6 +117,11 @@ public class QuestionRepositoryTest {
 
         // assert
         assertThat(questionOptional.get(), is(question2));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void updateWithNull() {
+        new QuestionRepository().update(null);
     }
 
     @Test
@@ -175,6 +190,11 @@ public class QuestionRepositoryTest {
         questionRepository.update(questionToUpdate);
 
         // assert
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void deleteWithNull() {
+        new QuestionRepository().delete(null);
     }
 
     @Test
