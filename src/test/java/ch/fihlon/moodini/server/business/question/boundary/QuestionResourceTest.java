@@ -53,6 +53,16 @@ public class QuestionResourceTest {
     @ObjectUnderTest(postConstruct = true)
     private QuestionResource questionResource;
 
+    @Test(expected = NullPointerException.class)
+    public void testConstructorWithNull() {
+        new QuestionResource(null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void readWithNullQuestion() {
+        questionResource.read(null);
+    }
+
     @Test
     public void readExistingQuestion() {
         // arrange
@@ -79,6 +89,35 @@ public class QuestionResourceTest {
         questionResource.read(1L);
 
         // assert
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void updateWithNullQuestionId() {
+        // arrange
+        final Question testQuestion = Question.builder()
+                .questionId(1L)
+                .text("Test Question")
+                .build();
+
+        // act
+        questionResource.update(null, testQuestion, info);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void updateWithNullQuestion() {
+        questionResource.update(1L, null, info);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void updateWithNullUriInfo() {
+        // arrange
+        final Question testQuestion = Question.builder()
+                .questionId(1L)
+                .text("Test Question")
+                .build();
+
+        // act
+        questionResource.update(1L, testQuestion, null);
     }
 
     @Test
@@ -129,6 +168,11 @@ public class QuestionResourceTest {
         // assert
     }
 
+    @Test(expected = NullPointerException.class)
+    public void deleteWithNullQuestion() {
+        questionResource.delete(null);
+    }
+
     @Test
     public void deleteExistingQuestion() {
         // arrange
@@ -154,6 +198,21 @@ public class QuestionResourceTest {
         questionResource.delete(1L);
 
         // assert
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void voteWithNullQuestionId() {
+        questionResource.vote(null, Answer.FINE, info);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void voteWithNullAnswer() {
+        questionResource.vote(1L, null, info);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void voteWithNullUriInfo() {
+        questionResource.vote(1L, Answer.FINE, null);
     }
 
     @Test
