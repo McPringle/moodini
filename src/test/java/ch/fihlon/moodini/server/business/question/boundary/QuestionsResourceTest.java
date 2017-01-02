@@ -55,6 +55,27 @@ public class QuestionsResourceTest {
     @ObjectUnderTest(postConstruct = true)
     private QuestionsResource questionsResource;
 
+    @Test(expected = NullPointerException.class)
+    public void testConstructorWithNull() {
+        new QuestionsResource(null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void createWithNullQuestion() {
+        questionsResource.create(null, info);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void createWithNullUriInfo() {
+        // arrange
+        final Question testQuestion = Question.builder()
+                .text("Test Question")
+                .build();
+
+        // act
+        questionsResource.create(testQuestion, null);
+    }
+
     @Test
     public void createQuestion() throws URISyntaxException {
         // arrange
