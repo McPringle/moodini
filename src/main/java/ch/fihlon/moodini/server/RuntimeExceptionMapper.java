@@ -18,7 +18,6 @@
 package ch.fihlon.moodini.server;
 
 import lombok.NonNull;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.json.Json;
@@ -27,6 +26,7 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import java.util.ConcurrentModificationException;
@@ -43,43 +43,37 @@ public class RuntimeExceptionMapper implements ExceptionMapper<RuntimeException>
     @Override
     public Response toResponse(@NonNull final RuntimeException e) {
         log.error(e.getMessage(), e);
-        return createResponse(handleException(e));
+        return handleException(e);
     }
 
-    private ResponseData handleException(final Throwable e) {
+    private Response handleException(final Throwable e) {
         if (e instanceof ConcurrentModificationException) {
-            return new ResponseData(CONFLICT, e.getMessage());
+            return createResponse(CONFLICT, e.getMessage());
         }
         if (e instanceof NotFoundException) {
-            return new ResponseData(NOT_FOUND, e.getMessage());
+            return createResponse(NOT_FOUND, e.getMessage());
         }
         if (e instanceof UnsupportedOperationException) {
-            return new ResponseData(METHOD_NOT_ALLOWED, e.getMessage());
+            return createResponse(METHOD_NOT_ALLOWED, e.getMessage());
         }
         if (e instanceof WebApplicationException) {
             final WebApplicationException wae = (WebApplicationException) e;
-            return new ResponseData(Response.Status.fromStatusCode(wae.getResponse().getStatus()), wae.getMessage());
+            return createResponse(Response.Status.fromStatusCode(wae.getResponse().getStatus()), wae.getMessage());
         }
         if (e.getCause() != null) {
             return handleException(e.getCause());
         }
-        return new ResponseData(INTERNAL_SERVER_ERROR, e.getMessage());
+        return createResponse(INTERNAL_SERVER_ERROR, e.getMessage());
     }
 
-    private Response createResponse(ResponseData responseData) {
+    private Response createResponse(final Status status, final String message) {
         final JsonObject entity = Json.createObjectBuilder()
-                .add("status", responseData.getStatus().getStatusCode())
-                .add("message", responseData.getMessage())
+                .add("status", status.getStatusCode())
+                .add("message", message)
                 .build();
-        return Response.status(responseData.getStatus())
+        return Response.status(status)
                 .type(MediaType.APPLICATION_JSON)
                 .entity(entity).build();
-    }
-
-    @Value
-    private class ResponseData {
-        private Response.Status status;
-        private String message;
     }
 
 }
