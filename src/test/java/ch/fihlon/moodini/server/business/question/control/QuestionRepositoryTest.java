@@ -252,10 +252,11 @@ public class QuestionRepositoryTest {
         final Question question = createQuestion(questionRepository);
 
         // act
+        questionRepository.vote(question.getQuestionId(), Answer.FINE);
         final Long votes = questionRepository.vote(question.getQuestionId(), Answer.FINE);
 
         // assert
-        assertThat(votes, is(1L));
+        assertThat(votes, is(2L));
     }
 
     @Test(expected = NotFoundException.class)
