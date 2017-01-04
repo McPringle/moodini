@@ -109,7 +109,7 @@ public class QuestionRepositoryTest {
     public void readLatest() {
         // arrange
         final QuestionRepository questionRepository = new QuestionRepository();
-        final Question question1 = createQuestion(questionRepository);
+        createQuestion(questionRepository);
         final Question question2 = createQuestion(questionRepository);
 
         // act
