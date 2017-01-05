@@ -43,7 +43,7 @@ import java.util.Optional;
 @Produces(MediaType.APPLICATION_JSON)
 public class QuestionResource {
 
-    private QuestionService questionService;
+    private final QuestionService questionService;
 
     @Inject
     public QuestionResource(@NonNull final QuestionService questionService) {
