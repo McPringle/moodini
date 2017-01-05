@@ -48,7 +48,7 @@ public class RuntimeExceptionMapper implements ExceptionMapper<RuntimeException>
     }
 
     private Response handleException(final Throwable throwable) {
-        Response response = createResponse(INTERNAL_SERVER_ERROR, throwable.getMessage());
+        Response response;
 
         if (throwable instanceof ConcurrentModificationException) {
             response = createResponse(CONFLICT, throwable.getMessage());
@@ -61,6 +61,8 @@ public class RuntimeExceptionMapper implements ExceptionMapper<RuntimeException>
             response = createResponse(Response.Status.fromStatusCode(wae.getResponse().getStatus()), wae.getMessage());
         } else if (throwable.getCause() != null) {
             response = handleException(throwable.getCause());
+        } else {
+            response = createResponse(INTERNAL_SERVER_ERROR, throwable.getMessage());
         }
 
         return response;
