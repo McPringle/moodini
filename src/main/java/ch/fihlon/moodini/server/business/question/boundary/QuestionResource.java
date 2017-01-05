@@ -43,6 +43,8 @@ import java.util.Optional;
 @Produces(MediaType.APPLICATION_JSON)
 public class QuestionResource {
 
+    private static final String QUESTION_ID = "questionId";
+
     private final QuestionService questionService;
 
     @Inject
@@ -51,7 +53,7 @@ public class QuestionResource {
     }
 
     @GET
-    public Response read(@NonNull @PathParam("questionId") final Long questionId) {
+    public Response read(@NonNull @PathParam(QUESTION_ID) final Long questionId) {
         final Optional<Question> question = questionService.read(questionId);
         if (question.isPresent()) {
             return Response.ok(question.get()).build();
@@ -60,7 +62,7 @@ public class QuestionResource {
     }
 
     @PUT
-    public Response update(@NonNull @PathParam("questionId") final Long questionId,
+    public Response update(@NonNull @PathParam(QUESTION_ID) final Long questionId,
                            @NonNull @Valid final Question question,
                            @NonNull @Context final UriInfo info) {
         read(questionId); // only update existing questions
@@ -73,7 +75,7 @@ public class QuestionResource {
     }
 
     @DELETE
-    public Response delete(@NonNull @PathParam("questionId") final Long questionId) {
+    public Response delete(@NonNull @PathParam(QUESTION_ID) final Long questionId) {
         read(questionId); // only delete existing questions
         questionService.delete(questionId);
         return Response.noContent().build();
@@ -81,7 +83,7 @@ public class QuestionResource {
 
     @POST
     @Path("vote")
-    public Response vote(@NonNull @PathParam("questionId") final Long questionId,
+    public Response vote(@NonNull @PathParam(QUESTION_ID) final Long questionId,
                          @NonNull final Answer answer,
                          @NonNull @Context final UriInfo info) {
         questionService.vote(questionId, answer);
