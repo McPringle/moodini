@@ -32,7 +32,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.nullValue;
 
 public class QuestionRepositoryTest {
 
@@ -160,7 +159,7 @@ public class QuestionRepositoryTest {
         // assert
     }
 
-    @Test
+    @Test(expected = NotFoundException.class)
     public void updateNonExistingQuestion() {
         // arrange
         final QuestionRepository questionRepository = new QuestionRepository();
@@ -170,10 +169,9 @@ public class QuestionRepositoryTest {
                 .build();
 
         // act
-        final Question updatedQuestion = questionRepository.update(questionToUpdate);
+        questionRepository.update(questionToUpdate);
 
         // assert
-        assertThat(updatedQuestion, is(nullValue()));
     }
 
     @Test(expected = UnsupportedOperationException.class)

@@ -79,7 +79,7 @@ class QuestionRepository implements Serializable {
         final Long questionId = question.getQuestionId();
         final Question previousQuestion = read(questionId).orElse(null);
         if (previousQuestion == null) {
-            return null; // non-existing questions can't be updated
+            throw new NotFoundException("The question to update does not exist!");
         }
         if (!previousQuestion.getVersion().equals(question.getVersion())) {
             throw new ConcurrentModificationException("You tried to update a question that was modified concurrently!");
