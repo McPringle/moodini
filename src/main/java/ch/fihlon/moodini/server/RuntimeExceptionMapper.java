@@ -59,10 +59,10 @@ public class RuntimeExceptionMapper implements ExceptionMapper<RuntimeException>
         } else if (throwable instanceof WebApplicationException) {
             final WebApplicationException wae = (WebApplicationException) throwable;
             response = createResponse(Response.Status.fromStatusCode(wae.getResponse().getStatus()), wae.getMessage());
-        } else if (throwable.getCause() != null) {
-            response = handleException(throwable.getCause());
-        } else {
+        } else if (throwable.getCause() == null) {
             response = createResponse(INTERNAL_SERVER_ERROR, throwable.getMessage());
+        } else {
+            response = handleException(throwable.getCause());
         }
 
         return response;
