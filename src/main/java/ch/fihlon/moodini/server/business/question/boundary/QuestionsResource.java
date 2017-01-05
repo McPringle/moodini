@@ -57,7 +57,7 @@ public class QuestionsResource {
 
     @GET
     public Response read() {
-        List<Question> questions = questionService.read();
+        final List<Question> questions = questionService.read();
         return Response.ok(questions).build();
     }
 
