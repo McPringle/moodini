@@ -42,25 +42,25 @@ import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 public class RuntimeExceptionMapper implements ExceptionMapper<RuntimeException> {
 
     @Override
-    public Response toResponse(@NonNull final RuntimeException e) {
-        log.error(e.getMessage(), e);
-        return handleException(e);
+    public Response toResponse(@NonNull final RuntimeException exception) {
+        log.error(exception.getMessage(), exception);
+        return handleException(exception);
     }
 
-    private Response handleException(final Throwable e) {
-        Response response = createResponse(INTERNAL_SERVER_ERROR, e.getMessage());
+    private Response handleException(final Throwable throwable) {
+        Response response = createResponse(INTERNAL_SERVER_ERROR, throwable.getMessage());
 
-        if (e instanceof ConcurrentModificationException) {
-            response = createResponse(CONFLICT, e.getMessage());
-        } else if (e instanceof NotFoundException) {
-            response = createResponse(NOT_FOUND, e.getMessage());
-        } else if (e instanceof UnsupportedOperationException) {
-            response = createResponse(METHOD_NOT_ALLOWED, e.getMessage());
-        } else if (e instanceof WebApplicationException) {
-            final WebApplicationException wae = (WebApplicationException) e;
+        if (throwable instanceof ConcurrentModificationException) {
+            response = createResponse(CONFLICT, throwable.getMessage());
+        } else if (throwable instanceof NotFoundException) {
+            response = createResponse(NOT_FOUND, throwable.getMessage());
+        } else if (throwable instanceof UnsupportedOperationException) {
+            response = createResponse(METHOD_NOT_ALLOWED, throwable.getMessage());
+        } else if (throwable instanceof WebApplicationException) {
+            final WebApplicationException wae = (WebApplicationException) throwable;
             response = createResponse(Response.Status.fromStatusCode(wae.getResponse().getStatus()), wae.getMessage());
-        } else if (e.getCause() != null) {
-            response = handleException(e.getCause());
+        } else if (throwable.getCause() != null) {
+            response = handleException(throwable.getCause());
         }
 
         return response;
