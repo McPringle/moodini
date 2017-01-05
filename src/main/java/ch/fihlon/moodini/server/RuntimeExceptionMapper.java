@@ -48,23 +48,22 @@ public class RuntimeExceptionMapper implements ExceptionMapper<RuntimeException>
     }
 
     private Response handleException(final Throwable e) {
+        Response response = createResponse(INTERNAL_SERVER_ERROR, e.getMessage());
+
         if (e instanceof ConcurrentModificationException) {
-            return createResponse(CONFLICT, e.getMessage());
-        }
-        if (e instanceof NotFoundException) {
-            return createResponse(NOT_FOUND, e.getMessage());
-        }
-        if (e instanceof UnsupportedOperationException) {
-            return createResponse(METHOD_NOT_ALLOWED, e.getMessage());
-        }
-        if (e instanceof WebApplicationException) {
+            response = createResponse(CONFLICT, e.getMessage());
+        } else if (e instanceof NotFoundException) {
+            response = createResponse(NOT_FOUND, e.getMessage());
+        } else if (e instanceof UnsupportedOperationException) {
+            response = createResponse(METHOD_NOT_ALLOWED, e.getMessage());
+        } else if (e instanceof WebApplicationException) {
             final WebApplicationException wae = (WebApplicationException) e;
-            return createResponse(Response.Status.fromStatusCode(wae.getResponse().getStatus()), wae.getMessage());
+            response = createResponse(Response.Status.fromStatusCode(wae.getResponse().getStatus()), wae.getMessage());
+        } else if (e.getCause() != null) {
+            response = handleException(e.getCause());
         }
-        if (e.getCause() != null) {
-            return handleException(e.getCause());
-        }
-        return createResponse(INTERNAL_SERVER_ERROR, e.getMessage());
+
+        return response;
     }
 
     private Response createResponse(@NotNull final Status status, @NotNull final String message) {
