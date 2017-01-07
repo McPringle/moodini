@@ -1,7 +1,7 @@
 *Moodini*
 =========
 
-[![Build Status](https://travis-ci.org/McPringle/moodini.svg?branch=master)](https://travis-ci.org/McPringle/moodini) [![Coverage Status](https://coveralls.io/repos/github/McPringle/moodini/badge.svg?branch=master)](https://coveralls.io/github/McPringle/moodini?branch=master) [![Stories in Ready](https://badge.waffle.io/McPringle/moodini.png?label=ready&title=ready)](http://waffle.io/McPringle/moodini) [![gitmoji](https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg)](https://gitmoji.carloscuesta.me)
+[![Build Status](https://travis-ci.org/McPringle/moodini.svg?branch=master)](https://travis-ci.org/McPringle/moodini) [![Coverage Status](https://coveralls.io/repos/github/McPringle/moodini/badge.svg?branch=master)](https://coveralls.io/github/McPringle/moodini?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/f5a5b7a6eeaf4609aedc50432a535bde)](https://www.codacy.com/app/McPringle/moodini?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=McPringle/moodini&amp;utm_campaign=Badge_Grade) [![Stories in Ready](https://badge.waffle.io/McPringle/moodini.png?label=ready&title=ready)](http://waffle.io/McPringle/moodini) [![gitmoji](https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg)](https://gitmoji.carloscuesta.me)
 
 **An easy to use mood application. For more information please take a look at our [project website](https://moodini.ch/).**
 
