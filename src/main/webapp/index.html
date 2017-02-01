@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Moodini</title>
+        <script src="bower_components/jquery/dist/jquery.min.js"></script>
+        <style>
+            body {
+                background-color: black;
+                color: silver;
+                font-family: sans-serif;
+            }
+            main {
+                border-color: silver;
+                border-radius: 3em;
+                border-style: solid;
+                padding: 1em;
+            }
+            h1 {
+                font-size: 10em;
+                margin-top: 0;
+                text-align: center;
+                text-transform: uppercase;
+            }
+            h2 {
+                font-size: 5em;
+                text-align: center;
+            }
+            div {
+                font-size: 12em;
+                text-align: center;
+            }
+            div > span {
+                margin: .2em;
+                width: 20%;
+            }
+        </style>
+        <script>
+            var questionId = 0;
+
+            function loadLatestQuestion() {
+                $.ajax({
+                    url: 'http://localhost:8080/api/questions/latest'
+                }).done(function (question) {
+                    questionId = question.questionId;
+                    $('h2').text(question.text);
+                }).fail(function () {
+                    alert('Error loading the latest question. Reloading Moodini may help, who knows…');
+                });
+                setTimeout(loadLatestQuestion, 60000);
+            }
+            $(function() {
+                loadLatestQuestion();
+
+                $('span').click(function(){
+                    var value = $(this).attr('data-value');
+                    $.ajax({
+                        url: 'http://localhost:8080/api/questions/' + questionId + '/vote',
+                        type: 'POST',
+                        data: '{"value":"' + value + '"}',
+                        dataType: 'text',
+                        contentType: 'application/json'
+                    }).done(function(data, textStatus, jqXHR) {
+                        alert('Voted!');
+                    }).fail(function(jqXHR, textStatus, errorThrown) {
+                        alert('Error while voting. Reloading Moodini may help, who knows…');
+                    });
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <main>
+            <h1>Moodini</h1>
+            <h2></h2>
+            <div>
+                <span data-value="AMPED">&#128543;</span>
+                <span data-value="GOOD">&#128542;</span>
+                <span data-value="FINE">&#128528;</span>
+                <span data-value="MEH">&#128522;</span>
+                <span data-value="PISSED">&#128512;</span>
+            </div>
+        </main>
+    </body>
+</html>

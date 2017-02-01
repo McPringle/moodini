@@ -4,3 +4,4 @@
 build
 moodini.iml
 nb-configuration.xml
+src/main/webapp/bower_components
