@@ -5,7 +5,7 @@
 
 **An easy to use mood application. For more information please take a look at our [project website](https://moodini.ch/).**
 
-*Copyright (C) 2016 Marcus Fihlon*
+*Copyright (C) 2016, 2017 Marcus Fihlon*
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
