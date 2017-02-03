@@ -80,6 +80,7 @@ dependencies {
             'javax:javaee-api:7.0'                              // amazing microservice framework
     )
     compile (
+            'com.airhacks:jaxrs-cors:0.0.1',                    // setup CORS extension automatically
             'com.google.code.gson:gson:2.8.0',                  // easy to use JSON parser
             'com.google.guava:guava:20.0',                      // tons of utilities
             'org.jetbrains:annotations:15.0',                   // @NotNull and @Nullable annotations
