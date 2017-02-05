@@ -53,6 +53,15 @@ public class QuestionResource {
     }
 
     @GET
+    public Response read(@NonNull @PathParam(QUESTION_ID) final String value) {
+        if ("latest".equalsIgnoreCase(value)) {
+            final Question question = questionService.readLatest();
+            return Response.ok(question).build();
+        }
+        final Long questionId = Long.parseLong(value);
+        return read(questionId);
+    }
+
     public Response read(@NonNull @PathParam(QUESTION_ID) final Long questionId) {
         final Optional<Question> question = questionService.read(questionId);
         if (question.isPresent()) {

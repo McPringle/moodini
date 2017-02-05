@@ -60,7 +60,12 @@ public class QuestionResourceTest {
 
     @Test(expected = NullPointerException.class)
     public void readWithNullQuestion() {
-        questionResource.read(null);
+        questionResource.read((Long) null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void readLatestWithNullQuestion() {
+        questionResource.read((String) null);
     }
 
     @Test
