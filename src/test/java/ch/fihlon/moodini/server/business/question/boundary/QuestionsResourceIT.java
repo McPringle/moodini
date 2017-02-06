@@ -104,8 +104,8 @@ public class QuestionsResourceIT {
                     .statusCode(200)
                     .contentType(ContentType.JSON)
                 .extract().response().asString();
-        final List<Question> allQUestions = Lists.newArrayList(new Gson().fromJson(allQuestionsJson, Question[].class));
-        assertThat(allQUestions.contains(question), is(true));
+        final List<Question> allQuestions = Lists.newArrayList(new Gson().fromJson(allQuestionsJson, Question[].class));
+        assertThat(allQuestions.contains(question), is(true));
 
         // read the new question should finish successful
         final String oneQuestionJson = given()
