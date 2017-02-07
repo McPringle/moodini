@@ -119,6 +119,18 @@ public class QuestionsResourceIT {
         final Question oneQuestion = new Gson().fromJson(oneQuestionJson, Question.class);
         assertThat(oneQuestion, is(question));
 
+        // read the latest question should return the new question
+        final String latestQuestionJson = given()
+            .when()
+                .get("/api/questions/latest")
+            .then()
+                .assertThat()
+                    .statusCode(200)
+                    .contentType(ContentType.JSON)
+                .extract().response().asString();
+        final Question latestQuestion = new Gson().fromJson(latestQuestionJson, Question.class);
+        assertThat(latestQuestion, is(question));
+
         // read a non-existing question should return a not found
         given()
             .when()
