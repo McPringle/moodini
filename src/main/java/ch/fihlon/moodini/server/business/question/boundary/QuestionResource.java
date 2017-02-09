@@ -1,6 +1,6 @@
 /*
  * Moodini
- * Copyright (C) 2016 Marcus Fihlon
+ * Copyright (C) 2016, 2017 Marcus Fihlon
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,7 +18,6 @@
 package ch.fihlon.moodini.server.business.question.boundary;
 
 import ch.fihlon.moodini.server.business.question.control.QuestionService;
-import ch.fihlon.moodini.server.business.question.entity.Answer;
 import ch.fihlon.moodini.server.business.question.entity.Question;
 import lombok.NonNull;
 
@@ -27,7 +26,6 @@ import javax.validation.Valid;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
-import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -88,16 +86,6 @@ public class QuestionResource {
         read(questionId); // only delete existing questions
         questionService.delete(questionId);
         return Response.noContent().build();
-    }
-
-    @POST
-    @Path("vote")
-    public Response vote(@NonNull @PathParam(QUESTION_ID) final Long questionId,
-                         @NonNull final Answer answer,
-                         @NonNull @Context final UriInfo info) {
-        questionService.vote(questionId, answer);
-        final URI uri = info.getAbsolutePath();
-        return Response.created(uri).build();
     }
 
 }

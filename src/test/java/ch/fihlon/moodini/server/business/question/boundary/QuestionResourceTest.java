@@ -1,6 +1,6 @@
 /*
  * Moodini
- * Copyright (C) 2016 Marcus Fihlon
+ * Copyright (C) 2016, 2017 Marcus Fihlon
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,7 +18,6 @@
 package ch.fihlon.moodini.server.business.question.boundary;
 
 import ch.fihlon.moodini.server.business.question.control.QuestionService;
-import ch.fihlon.moodini.server.business.question.entity.Answer;
 import ch.fihlon.moodini.server.business.question.entity.Question;
 import org.junit.Rule;
 import org.junit.Test;
@@ -203,39 +202,6 @@ public class QuestionResourceTest {
         questionResource.delete(1L);
 
         // assert
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void voteWithNullQuestionId() {
-        questionResource.vote(null, Answer.FINE, info);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void voteWithNullAnswer() {
-        questionResource.vote(1L, null, info);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void voteWithNullUriInfo() {
-        questionResource.vote(1L, Answer.FINE, null);
-    }
-
-    @Test
-    public void vote() throws URISyntaxException {
-        // arrange
-        final Question testQuestion = Question.builder()
-                .questionId(1L)
-                .text("Test Question")
-                .build();
-        when(questionService.read(1L)).thenReturn(Optional.of(testQuestion));
-        when(info.getAbsolutePath()).thenReturn(new URI("/questions/1/vote"));
-
-        // act
-        final Response response = questionResource.vote(testQuestion.getQuestionId(), Answer.FINE, info);
-
-        // assert
-        assertThat(response.getStatus(), is(201));
-        assertThat(response.getLocation().getPath(), endsWith("/questions/1/vote"));
     }
 
 }
