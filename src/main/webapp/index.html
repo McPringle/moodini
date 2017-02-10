@@ -41,7 +41,7 @@
 
             function loadLatestQuestion() {
                 $.ajax({
-                    url: 'http://localhost:8080/api/questions/latest'
+                    url: '/api/questions/latest'
                 }).done(function (question) {
                     questionId = question.questionId;
                     $('h2').text(question.text);
@@ -56,7 +56,7 @@
                 $('span').click(function(){
                     var value = $(this).attr('data-value');
                     $.ajax({
-                        url: 'http://localhost:8080/api/questions/' + questionId + '/vote',
+                        url: '/api/questions/' + questionId + '/votes',
                         type: 'POST',
                         data: '{"value":"' + value + '"}',
                         dataType: 'text',
