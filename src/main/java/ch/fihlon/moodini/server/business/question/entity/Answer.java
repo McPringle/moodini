@@ -21,7 +21,6 @@ import java.io.Serializable;
 
 public enum Answer implements Serializable {
 
-    // CHECKSTYLE DISABLE JavadocVariable FOR 5 LINES
     AMPED,
     GOOD,
     FINE,
