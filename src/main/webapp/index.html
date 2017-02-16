@@ -8,63 +8,92 @@
         <style>
             body {
                 background-color: black;
-                color: silver;
+                color: #48B7E2;
                 font-family: sans-serif;
             }
             main {
-                border-color: silver;
+                bottom: 1em;
+                border-color: #48B7E2;
                 border-radius: 3em;
                 border-style: solid;
+                left: 1em;
                 padding: 1em;
+                position: absolute;
+                right: 1em;
+                top: 1em;
             }
-            h1 {
-                font-size: 10em;
-                margin-top: 0;
+            div#header {
+                background-image: url("images/moodini.svg");
+                background-position: center center;
+                background-repeat: no-repeat;
+                height: 8em;
+                margin: 3em 1em 3em 1em;
+            }
+            div#question {
+                font-size: 3em;
+                margin: 3em 1em 3em 1em;
                 text-align: center;
-                text-transform: uppercase;
             }
-            h2 {
-                font-size: 5em;
+            div#voting {
+                box-sizing: border-box;
                 text-align: center;
             }
-            div {
-                font-size: 12em;
-                text-align: center;
-            }
-            div > span {
-                margin: .2em;
+            div#voting div {
+                box-sizing: border-box;
+                float: left;
                 width: 20%;
+            }
+            div#voting a {
+                background-position: center center;
+                background-repeat: no-repeat;
+                background-size: 60%;
+                box-sizing: border-box;
+                display: block;
+                height: 15em;
             }
         </style>
         <script>
+            var urlPrefix = window.location.href.indexOf('localhost') === -1 ? '' : 'http://localhost:8080';
             var questionId = 0;
+            var votingActive = false;
 
             function loadLatestQuestion() {
                 $.ajax({
-                    url: '/api/questions/latest'
+                    url: urlPrefix + '/api/questions/latest'
                 }).done(function (question) {
                     questionId = question.questionId;
-                    $('h2').text(question.text);
+                    $('#question').text(question.text);
+                    votingActive = true;
                 }).fail(function () {
-                    alert('Error loading the latest question. Reloading Moodini may help, who knows…');
+                    alert('Error loading the latest question. Will try to fix this problem with a reload of Moodini…');
+                    window.location.reload();
                 });
                 setTimeout(loadLatestQuestion, 60000);
             }
             $(function() {
                 loadLatestQuestion();
 
-                $('span').click(function(){
-                    var value = $(this).attr('data-value');
+                $('div#voting a').click(function() {
+                    if (!votingActive) return;
+                    votingActive = false;
+                    var source = $(this);
+                    var value = source.attr('data-value');
                     $.ajax({
-                        url: '/api/questions/' + questionId + '/votes',
+                        url: urlPrefix + '/api/questions/' + questionId + '/votes',
                         type: 'POST',
-                        data: '{"value":"' + value + '"}',
+                        data: '{"value":"' + value.toUpperCase() + '"}',
                         dataType: 'text',
                         contentType: 'application/json'
                     }).done(function(data, textStatus, jqXHR) {
-                        alert('Voted!');
+                        source.animate({backgroundSize:'45%'}, 200)
+                            .animate({backgroundSize:'75%'}, 200)
+                            .animate({backgroundSize:'60%'}, 200);
+                        setTimeout(function() {
+                            votingActive = true;
+                        }, 1000);
                     }).fail(function(jqXHR, textStatus, errorThrown) {
-                        alert('Error while voting. Reloading Moodini may help, who knows…');
+                        alert('Error while counting your vote. Will try to fix this problem with a reload of Moodini…');
+                        window.location.reload();
                     });
                 });
             });
@@ -72,15 +101,16 @@
     </head>
     <body>
         <main>
-            <h1>Moodini</h1>
-            <h2></h2>
-            <div>
-                <span data-value="AMPED">&#128543;</span>
-                <span data-value="GOOD">&#128542;</span>
-                <span data-value="FINE">&#128528;</span>
-                <span data-value="MEH">&#128522;</span>
-                <span data-value="PISSED">&#128512;</span>
+            <div id="header"></div>
+            <div id="question"></div>
+            <div id="voting">
+                <div><a href="#" style="background-image: url('images/5.svg')" data-value="Amped"></a></div>
+                <div><a href="#" style="background-image: url('images/4.svg')" data-value="Good"></a></div>
+                <div><a href="#" style="background-image: url('images/3.svg')" data-value="Fine"></a></div>
+                <div><a href="#" style="background-image: url('images/2.svg')" data-value="Meh"></a></div>
+                <div><a href="#" style="background-image: url('images/1.svg')" data-value="Pissed"></a></div>
             </div>
+            <br clear="all" />
         </main>
     </body>
 </html>
