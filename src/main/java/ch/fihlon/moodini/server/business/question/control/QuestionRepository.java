@@ -20,12 +20,14 @@ package ch.fihlon.moodini.server.business.question.control;
 import ch.fihlon.moodini.server.business.question.entity.Answer;
 import ch.fihlon.moodini.server.business.question.entity.Question;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 
 import javax.ws.rs.NotFoundException;
 import java.io.Serializable;
 import java.util.ConcurrentModificationException;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -133,5 +135,11 @@ class QuestionRepository implements Serializable {
 
     private Boolean hasAnswers(@NotNull final Long questionId) {
         return !getAnswers(questionId).isEmpty();
+    }
+
+    Map<Answer, Long> voteResult(@NonNull final Long questionId) {
+        final Map<Answer, Long> result = new EnumMap<>(Answer.class);
+        getAnswers(questionId).forEach((answer, count) -> result.put(answer, count.longValue()));
+        return ImmutableMap.copyOf(result);
     }
 }

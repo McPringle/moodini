@@ -25,12 +25,19 @@ import org.junit.Test;
 import javax.ws.rs.NotFoundException;
 import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import static ch.fihlon.moodini.server.business.question.entity.Answer.AMPED;
+import static ch.fihlon.moodini.server.business.question.entity.Answer.FINE;
+import static ch.fihlon.moodini.server.business.question.entity.Answer.GOOD;
+import static ch.fihlon.moodini.server.business.question.entity.Answer.MEH;
+import static ch.fihlon.moodini.server.business.question.entity.Answer.PISSED;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.anEmptyMap;
 import static org.hamcrest.Matchers.contains;
 
 public class QuestionRepositoryTest {
@@ -184,7 +191,7 @@ public class QuestionRepositoryTest {
                 .build();
 
         // act
-        questionRepository.vote(createdQuestion.getQuestionId(), Answer.FINE);
+        questionRepository.vote(createdQuestion.getQuestionId(), FINE);
         questionRepository.update(questionToUpdate);
 
         // assert
@@ -227,7 +234,7 @@ public class QuestionRepositoryTest {
         final Question question = createQuestion(questionRepository);
 
         // act
-        questionRepository.vote(question.getQuestionId(), Answer.FINE);
+        questionRepository.vote(question.getQuestionId(), FINE);
         questionRepository.delete(question.getQuestionId());
 
         // assert
@@ -235,7 +242,7 @@ public class QuestionRepositoryTest {
 
     @Test(expected = NullPointerException.class)
     public void voteWithNullQuestionId() {
-        new QuestionRepository().vote(null, Answer.FINE);
+        new QuestionRepository().vote(null, FINE);
     }
 
     @Test(expected = NullPointerException.class)
@@ -250,8 +257,8 @@ public class QuestionRepositoryTest {
         final Question question = createQuestion(questionRepository);
 
         // act
-        questionRepository.vote(question.getQuestionId(), Answer.FINE);
-        final Long votes = questionRepository.vote(question.getQuestionId(), Answer.FINE);
+        questionRepository.vote(question.getQuestionId(), FINE);
+        final Long votes = questionRepository.vote(question.getQuestionId(), FINE);
 
         // assert
         assertThat(votes, is(2L));
@@ -263,9 +270,45 @@ public class QuestionRepositoryTest {
         final QuestionRepository questionRepository = new QuestionRepository();
 
         // act
-        questionRepository.vote(1L, Answer.FINE);
+        questionRepository.vote(1L, FINE);
 
         // assert
+    }
+
+    @Test
+    public void voteResultEmpty() {
+        // arrange
+        final QuestionRepository questionRepository = new QuestionRepository();
+        final Question question = createQuestion(questionRepository);
+
+        // act
+        final Map<Answer, Long> result = questionRepository.voteResult(question.getQuestionId());
+
+        // assert
+        assertThat(result, is(anEmptyMap()));
+    }
+
+    @Test
+    public void voteResultSuccess() {
+        // arrange
+        final QuestionRepository questionRepository = new QuestionRepository();
+        final Question question = createQuestion(questionRepository);
+        questionRepository.vote(question.getQuestionId(), AMPED);
+        questionRepository.vote(question.getQuestionId(), FINE);
+        questionRepository.vote(question.getQuestionId(), GOOD);
+        questionRepository.vote(question.getQuestionId(), MEH);
+        questionRepository.vote(question.getQuestionId(), PISSED);
+
+        // act
+        final Map<Answer, Long> result = questionRepository.voteResult(question.getQuestionId());
+
+        // assert
+        assertThat(result.size(), is(5));
+        assertThat(result.get(AMPED), is(1L));
+        assertThat(result.get(FINE), is(1L));
+        assertThat(result.get(GOOD), is(1L));
+        assertThat(result.get(MEH), is(1L));
+        assertThat(result.get(AMPED), is(1L));
     }
 
 }
