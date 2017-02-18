@@ -28,6 +28,7 @@ import javax.inject.Singleton;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.NotFoundException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -121,4 +122,16 @@ public class QuestionService {
         read(questionId).orElseThrow(NotFoundException::new);
         return controller.executeAndQuery(ctrl -> ctrl.vote(questionId, answer));
     }
+
+    /**
+     * Get the vote results for the {@link Question} with the specified id.
+     *
+     * @param questionId the id of a {@link Question}
+     * @return the vote results for this {@link Question}
+     */
+    public Map<Answer, Long> voteResult(@NotNull final Long questionId) {
+        read(questionId).orElseThrow(NotFoundException::new);
+        return controller.executeAndQuery(ctrl -> ctrl.voteResult(questionId));
+    }
+
 }

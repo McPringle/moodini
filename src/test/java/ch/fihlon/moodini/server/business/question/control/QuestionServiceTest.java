@@ -28,8 +28,12 @@ import pl.setblack.airomem.core.SimpleController;
 import pl.setblack.airomem.core.VoidCommand;
 
 import java.io.Serializable;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Optional;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
@@ -197,6 +201,27 @@ public class QuestionServiceTest {
 
         // assert
         verify(simpleControllerMock, times(1)).executeAndQuery(any(VoidCommand.class));
+    }
+
+    @Test
+    public void voteResult() {
+        // arrange
+        final Question testQuestion = Question.builder()
+                .questionId(1L)
+                .text("Test Question")
+                .build();
+        final QuestionService questionService = new QuestionService();
+        final QuestionRepository questionRepository = mock(QuestionRepository.class);
+        final EnumMap<Answer, Long>  votes = new EnumMap<>(Answer.class);
+        when(questionRepository.voteResult(testQuestion.getQuestionId())).thenReturn(votes);
+        questionService.setupResources();
+
+        // act
+        final Map<Answer, Long> result = questionService.voteResult(testQuestion.getQuestionId());
+        questionService.cleanupResources();
+
+        // assert
+        assertThat(result, is(votes));
     }
 
 }
