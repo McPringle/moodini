@@ -30,6 +30,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.EnumMap;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -87,6 +88,20 @@ public class VotesResourceTest {
         // assert
         assertThat(response.getStatus(), is(201));
         assertThat(response.getLocation().getPath(), endsWith("/questions/1/vote"));
+    }
+
+    @Test
+    public void voteResult() {
+        // arrange
+        final EnumMap<Answer, Long> votes = new EnumMap<>(Answer.class);
+        when(questionService.voteResult(1L)).thenReturn(votes);
+
+        // act
+        final Response response = votesResource.read(1L);
+
+        // assert
+        assertThat(response.getStatus(), is(200));
+        assertThat(response.getEntity(), is(votes));
     }
 
 }

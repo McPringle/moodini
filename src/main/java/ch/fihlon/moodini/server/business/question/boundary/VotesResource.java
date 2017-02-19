@@ -22,6 +22,7 @@ import ch.fihlon.moodini.server.business.question.entity.Answer;
 import lombok.NonNull;
 
 import javax.inject.Inject;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -31,6 +32,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.util.Map;
 
 @Path("questions/{questionId}/votes")
 @Produces(MediaType.APPLICATION_JSON)
@@ -52,6 +54,12 @@ public class VotesResource {
         questionService.vote(questionId, answer);
         final URI uri = info.getAbsolutePath();
         return Response.created(uri).build();
+    }
+
+    @GET
+    public Response read(@NonNull @PathParam(QUESTION_ID) final Long questionId) {
+        final Map<Answer, Long> result = questionService.voteResult(questionId);
+        return Response.ok(result).build();
     }
 
 }
