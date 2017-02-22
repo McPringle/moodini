@@ -1,6 +1,6 @@
 /*
  * Moodini
- * Copyright (C) 2016 Marcus Fihlon
+ * Copyright (C) 2016, 2017 Marcus Fihlon
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,7 +19,8 @@ package ch.fihlon.moodini.server;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import pl.setblack.airomem.core.SimpleController;
+import pl.setblack.airomem.core.PersistenceController;
+import pl.setblack.airomem.core.builders.PrevaylerBuilder;
 
 import java.io.File;
 import java.io.Serializable;
@@ -29,13 +30,19 @@ import java.util.function.Supplier;
 @UtilityClass
 public class PersistenceManager {
 
-    public static <T extends Serializable> SimpleController<T> createSimpleController(
+    public static <T extends Serializable> PersistenceController<T> createController(
             final Class<? extends Serializable> clazz, final Supplier<T> constructor) {
+
         final String dir = String.format(".moodini%sdata%s%s", //NON-NLS
                 File.separator, File.separator, clazz.getName());
         log.info("Using persistence store '{}' for entity '{}'.", //NON-NLS
                 dir, clazz.getName());
-        return SimpleController.loadOptional(dir, constructor);
+
+        return PrevaylerBuilder
+                .<T>newBuilder()
+                .withinUserFolder(dir)
+                .useSupplier(constructor)
+                .build();
     }
 
 }

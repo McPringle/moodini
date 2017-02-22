@@ -1,6 +1,6 @@
 /*
  * Moodini
- * Copyright (C) 2016 Marcus Fihlon
+ * Copyright (C) 2016, 2017 Marcus Fihlon
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -88,7 +88,7 @@ dependencies {
             'org.slf4j:slf4j-api:1.7.21',                       // log framework abstraction
             'org.slf4j:slf4j-simple:1.7.21',                    // just logs to the console
             'org.zalando.phrs:jersey-media-json-gson:0.1',      // Jersey GSON entity providers support
-            'pl.setblack:airomem-core:1.0.5'                    // Prevayler based persistence engine
+            'pl.setblack:airomem-core:1.1.0'                    // Prevayler based persistence engine
     )
     testCompile (
             'fish.payara.blue.extras:payara-micro:4.1.1.164',   // embedded application server for integration tests

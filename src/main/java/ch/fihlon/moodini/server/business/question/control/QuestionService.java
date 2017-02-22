@@ -1,6 +1,6 @@
 /*
  * Moodini
- * Copyright (C) 2016 Marcus Fihlon
+ * Copyright (C) 2016, 2017 Marcus Fihlon
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,7 +20,7 @@ package ch.fihlon.moodini.server.business.question.control;
 import ch.fihlon.moodini.server.PersistenceManager;
 import ch.fihlon.moodini.server.business.question.entity.Answer;
 import ch.fihlon.moodini.server.business.question.entity.Question;
-import pl.setblack.airomem.core.SimpleController;
+import pl.setblack.airomem.core.PersistenceController;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -37,11 +37,11 @@ import java.util.Optional;
 @Singleton
 public class QuestionService {
 
-    private SimpleController<QuestionRepository> controller;
+    private PersistenceController<QuestionRepository> controller;
 
     @PostConstruct
     public void setupResources() {
-        this.controller = PersistenceManager.createSimpleController(Question.class, QuestionRepository::new);
+        this.controller = PersistenceManager.createController(Question.class, QuestionRepository::new);
     }
 
     @PreDestroy
@@ -78,7 +78,7 @@ public class QuestionService {
      * @return the {@link Question}
      */
     public Optional<Question> read(@NotNull final Long questionId) {
-        return controller.readOnly().read(questionId);
+        return controller.query(ctrl -> ctrl.read(questionId));
     }
 
     /**
@@ -87,7 +87,7 @@ public class QuestionService {
      * @return a {@link List} of all {@link Question}s
      */
     public List<Question> read() {
-        return controller.readOnly().readAll();
+        return controller.query(QuestionRepository::readAll);
     }
 
     /**
@@ -96,7 +96,7 @@ public class QuestionService {
      * @return the latest {@link Question}
      */
     public Question readLatest() {
-        final Optional<Question> optional = controller.readOnly().readLatest();
+        final Optional<Question> optional = controller.query(QuestionRepository::readLatest);
         return optional.orElseThrow(NotFoundException::new);
     }
 
