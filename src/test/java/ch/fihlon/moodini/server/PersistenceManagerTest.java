@@ -31,7 +31,6 @@ import java.lang.reflect.InvocationTargetException;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -44,14 +43,14 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class PersistenceManagerTest {
 
     @Test
-    public void createSimpleController() {
+    public void createController() {
         // arrange
         mockStatic(PrevaylerBuilder.class);
         @SuppressWarnings("unchecked")
         final PersistenceController<Serializable> controllerMock = mock(PersistenceController.class);
         final PrevaylerBuilder builderMock = mock(PrevaylerBuilder.class);
         when(PrevaylerBuilder.newBuilder()).thenReturn(builderMock);
-        when(builderMock.withinUserFolder(anyString())).thenReturn(builderMock);
+        when(builderMock.withFolder(anyObject())).thenReturn(builderMock);
         when(builderMock.useSupplier(anyObject())).thenReturn(builderMock);
         when(builderMock.build()).thenReturn(controllerMock);
 

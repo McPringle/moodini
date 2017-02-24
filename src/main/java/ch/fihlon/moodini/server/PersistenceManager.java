@@ -22,8 +22,9 @@ import lombok.extern.slf4j.Slf4j;
 import pl.setblack.airomem.core.PersistenceController;
 import pl.setblack.airomem.core.builders.PrevaylerBuilder;
 
-import java.io.File;
 import java.io.Serializable;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.function.Supplier;
 
 @Slf4j
@@ -33,14 +34,13 @@ public class PersistenceManager {
     public static <T extends Serializable> PersistenceController<T> createController(
             final Class<? extends Serializable> clazz, final Supplier<T> constructor) {
 
-        final String dir = String.format(".moodini%sdata%s%s", //NON-NLS
-                File.separator, File.separator, clazz.getName());
-        log.info("Using persistence store '{}' for entity '{}'.", //NON-NLS
-                dir, clazz.getName());
+        final String homeDir = System.getProperty("user.home");
+        final Path path = Paths.get(homeDir, ".moodini", "data");
+        log.info("Using persistence store '{}' for entity '{}'.", path, clazz.getName());
 
         return PrevaylerBuilder
                 .<T>newBuilder()
-                .withinUserFolder(dir)
+                .withFolder(path)
                 .useSupplier(constructor)
                 .build();
     }
