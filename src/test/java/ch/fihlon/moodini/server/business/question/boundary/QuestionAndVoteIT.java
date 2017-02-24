@@ -1,6 +1,6 @@
 /*
  * Moodini
- * Copyright (C) 2016 Marcus Fihlon
+ * Copyright (C) 2016, 2017 Marcus Fihlon
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -44,9 +44,10 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * This is the integration test for the class {@link QuestionsResource}.
+ * This is the integration test for the classes {@link QuestionsResource}, {@link QuestionResource} and
+ * {@link VotesResource}.
  */
-public class QuestionsResourceIT {
+public class QuestionAndVoteIT {
 
     @BeforeClass
     public static void setUp() throws BootstrapException {
