@@ -17,9 +17,11 @@
  */
 package ch.fihlon.moodini.server.business.question.boundary;
 
+import ch.fihlon.moodini.server.business.question.entity.Answer;
 import ch.fihlon.moodini.server.business.question.entity.Question;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import fish.payara.micro.BootstrapException;
 import fish.payara.micro.PayaraMicro;
 import io.restassured.http.ContentType;
@@ -29,8 +31,12 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.lang.reflect.Type;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
+import static ch.fihlon.moodini.server.business.question.entity.Answer.GOOD;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.is;
@@ -57,13 +63,24 @@ public class QuestionsResourceIT {
     @Test
     public void crud() {
         final Question question = Question.builder()
-                .text("Foobar?")
+                .text("CRUD test question " + LocalDateTime.now())
                 .build();
 
         final Long questionId = testCreateQuestion(question);
         final Question readQuestion = testReadQuestion(question.toBuilder().questionId(questionId).build());
         testUpdate(readQuestion);
         testDelete(questionId);
+    }
+
+    @Test
+    public void vote() {
+        final Question question = Question.builder()
+                .text("Vote test question " + LocalDateTime.now())
+                .build();
+
+        final Long questionId = testCreateQuestion(question);
+        testVote(questionId);
+        testDeleteWithVotes(questionId);
     }
 
     private Long testCreateQuestion(@NonNull final Question question) {
@@ -201,6 +218,45 @@ public class QuestionsResourceIT {
             .then()
                 .assertThat()
                     .statusCode(404);
+    }
+
+    private void testVote(final Long questionId) {
+        // add a new vote with success
+        given()
+                .when()
+                .contentType(ContentType.JSON)
+                .body("{\"value\":\"GOOD\"}")
+                //.body(new Gson().toJson(GOOD))
+                .post("/api/questions/" + questionId + "/votes")
+                .then()
+                .assertThat()
+                .statusCode(201)
+                .header("Location", notNullValue());
+
+        // the vote result should contain one GOOD vote
+        final String voteResultJson = given()
+                .when()
+                .get("/api/questions/" + questionId + "/votes")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .extract().response().asString();
+        final Type answerLongMap = new TypeToken<Map<Answer, Long>>(){}.getType();
+        final Map<Answer, Long> voteResult =
+                new Gson().fromJson(voteResultJson, answerLongMap);
+        assertThat(voteResult.size(), is(1));
+        assertThat(voteResult.get(GOOD), is(1L));
+    }
+
+    private void testDeleteWithVotes(final Long questionId) {
+        // delete the new question with success
+        given()
+            .when()
+                .delete("/api/questions/" + questionId)
+            .then()
+                .assertThat()
+                    .statusCode(405);
     }
 
 }
