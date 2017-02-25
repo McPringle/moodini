@@ -52,12 +52,9 @@ public class QuestionResource {
 
     @GET
     public Response read(@NonNull @PathParam(QUESTION_ID) final String value) {
-        if ("latest".equalsIgnoreCase(value)) {
-            final Question question = questionService.readLatest();
-            return Response.ok(question).build();
-        }
-        final Long questionId = Long.parseLong(value);
-        return read(questionId);
+        return "latest".equalsIgnoreCase(value)
+                ? Response.ok(questionService.readLatest()).build()
+                : read(Long.parseLong(value));
     }
 
     public Response read(@NonNull @PathParam(QUESTION_ID) final Long questionId) {
