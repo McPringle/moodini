@@ -6,50 +6,56 @@
         <title>Moodini</title>
         <script src="bower_components/jquery/dist/jquery.min.js"></script>
         <style>
+            a {
+                background-position: center center;
+                background-repeat: no-repeat;
+                background-size: 80%;
+                display: block;
+                float: left;
+                height: 100%;
+                text-decoration: none;
+                width: 20%;
+            }
             body {
                 background-color: black;
                 color: #48B7E2;
                 font-family: sans-serif;
             }
-            main {
-                bottom: 1em;
-                border-color: #48B7E2;
-                border-radius: 3em;
-                border-style: solid;
-                left: 1em;
-                padding: 1em;
-                position: absolute;
-                right: 1em;
-                top: 1em;
+            div > div {
+                align-items: center;
+                display: flex;
+                flex-direction: column;
+                height: 33%;
+                justify-content: center;
             }
-            div#header {
+            div > div > div {
+                align-items: center;
+                display: flex;
+                flex-direction: row;
+                height: 100%;
+                justify-content: center;
+                width: 100%;
+            }
+            #header {
                 background-image: url("images/moodini.svg");
                 background-position: center center;
                 background-repeat: no-repeat;
-                height: 5em;
-                margin: 3em 1em 3em 1em;
             }
-            div#question {
+            #question {
                 font-size: 3em;
-                margin: 1.5em 1em 1.5em 1em;
                 text-align: center;
             }
-            div#voting {
+            .page {
+                border-color: #48B7E2;
+                border-radius: 3em;
+                border-style: solid;
+                bottom: 1em;
                 box-sizing: border-box;
-                text-align: center;
-            }
-            div#voting div {
-                box-sizing: border-box;
-                float: left;
-                width: 20%;
-            }
-            div#voting a {
-                background-position: center center;
-                background-repeat: no-repeat;
-                background-size: 60%;
-                box-sizing: border-box;
-                display: block;
-                height: 15em;
+                left: 1em;
+                padding: 1em;
+                position: absolute;
+                top: 1em;
+                right: 1em;
             }
         </style>
         <script>
@@ -85,9 +91,9 @@
                         dataType: 'text',
                         contentType: 'application/json'
                     }).done(function(data, textStatus, jqXHR) {
-                        source.animate({backgroundSize:'45%'}, 200)
-                            .animate({backgroundSize:'75%'}, 200)
-                            .animate({backgroundSize:'60%'}, 200);
+                        source.animate({backgroundSize:'60%'}, 200)
+                            .animate({backgroundSize:'95%'}, 200)
+                            .animate({backgroundSize:'80%'}, 200);
                         setTimeout(function() {
                             votingActive = true;
                         }, 1000);
@@ -100,17 +106,25 @@
         </script>
     </head>
     <body>
-        <main>
-            <div id="header"></div>
-            <div id="question"></div>
-            <div id="voting">
-                <div><a href="#" style="background-image: url('images/5.svg')" data-value="Amped"></a></div>
-                <div><a href="#" style="background-image: url('images/4.svg')" data-value="Good"></a></div>
-                <div><a href="#" style="background-image: url('images/3.svg')" data-value="Fine"></a></div>
-                <div><a href="#" style="background-image: url('images/2.svg')" data-value="Meh"></a></div>
-                <div><a href="#" style="background-image: url('images/1.svg')" data-value="Pissed"></a></div>
+        <div class="page">
+            <div>
+                <div id="header">
+                    &nbsp;
+                </div>
             </div>
-            <br clear="all" />
-        </main>
+            <div>
+                <div id="question">
+                </div>
+            </div>
+            <div>
+                <div id="voting">
+                    <a href="#" style="background-image: url('images/5.svg')" data-value="Amped">&nbsp;</a>
+                    <a href="#" style="background-image: url('images/4.svg')" data-value="Good">&nbsp;</a>
+                    <a href="#" style="background-image: url('images/3.svg')" data-value="Fine">&nbsp;</a>
+                    <a href="#" style="background-image: url('images/2.svg')" data-value="Meh">&nbsp;</a>
+                    <a href="#" style="background-image: url('images/1.svg')" data-value="Pissed">&nbsp;</a>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
