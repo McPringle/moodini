@@ -83,6 +83,7 @@
                     if (!votingActive) return;
                     votingActive = false;
                     var source = $(this);
+                    source.animate({backgroundSize:'60%'}, 200);
                     var value = source.attr('data-value');
                     $.ajax({
                         url: urlPrefix + '/api/questions/' + questionId + '/votes',
@@ -91,8 +92,7 @@
                         dataType: 'text',
                         contentType: 'application/json'
                     }).done(function(data, textStatus, jqXHR) {
-                        source.animate({backgroundSize:'60%'}, 200)
-                            .animate({backgroundSize:'95%'}, 200)
+                        source.animate({backgroundSize:'95%'}, 200)
                             .animate({backgroundSize:'80%'}, 200);
                         setTimeout(function() {
                             votingActive = true;
