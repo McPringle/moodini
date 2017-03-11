@@ -35,7 +35,7 @@ public class PersistenceManager {
             final Class<? extends Serializable> clazz, final Supplier<T> constructor) {
 
         final String homeDir = System.getProperty("user.home");
-        final Path path = Paths.get(homeDir, ".moodini", "data");
+        final Path path = Paths.get(homeDir, ".moodini", "data", clazz.getName());
         log.info("Using persistence store '{}' for entity '{}'.", path, clazz.getName());
 
         return PrevaylerBuilder
