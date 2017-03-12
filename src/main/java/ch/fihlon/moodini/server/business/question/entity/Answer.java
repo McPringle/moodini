@@ -17,30 +17,14 @@
  */
 package ch.fihlon.moodini.server.business.question.entity;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 public enum Answer implements Serializable {
 
-    // CHECKSTYLE DISABLE JavadocVariable FOR 5 LINES
-    AMPED("Amped"),
-    GOOD("Good"),
-    FINE("Fine"),
-    MEH("Meh"),
-    PISSED("Pissed");
+    AMPED,
+    GOOD,
+    FINE,
+    MEH,
+    PISSED;
 
-    private String answer;
-
-    Answer(@NotNull final String answer) {
-        this.answer = answer;
-    }
-
-    /**
-     * Get the {@link String} representation of an {@link Answer}.
-     * 
-     * @return the {@link String} representation of an {@link Answer}
-     */
-    public String getAnswer() {
-        return answer;
-    }
 }

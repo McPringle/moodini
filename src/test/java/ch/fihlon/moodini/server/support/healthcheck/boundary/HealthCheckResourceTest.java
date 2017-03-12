@@ -1,6 +1,6 @@
 /*
  * Moodini
- * Copyright (C) 2016 Marcus Fihlon
+ * Copyright (C) 2017 Marcus Fihlon
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,27 +15,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.fihlon.moodini.server.business.question.entity;
+package ch.fihlon.moodini.server.support.healthcheck.boundary;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
+import org.junit.Test;
 
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
+import javax.ws.rs.core.Response;
 
-@Value
-@Builder(toBuilder = true)
-@EqualsAndHashCode(exclude={"version"})
-public class Question implements Serializable {
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
-    private static final long serialVersionUID = 1L;
+public class HealthCheckResourceTest {
 
-    private Long questionId;
+    @Test
+    public void healthCheck() {
+        // arrange
+        final String expected = "up and running";
+        final HealthCheckResource resource = new HealthCheckResource();
 
-    private Long version;
+        // act
+        final Response response = resource.healthCheck();
 
-    @NotNull
-    private String text;
+        // assert
+        assertThat(response.getStatus(), is(200));
+        assertThat(response.getEntity(), is(expected));
+    }
 
 }

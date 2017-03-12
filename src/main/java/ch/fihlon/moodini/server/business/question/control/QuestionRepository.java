@@ -20,13 +20,14 @@ package ch.fihlon.moodini.server.business.question.control;
 import ch.fihlon.moodini.server.business.question.entity.Answer;
 import ch.fihlon.moodini.server.business.question.entity.Question;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import javax.ws.rs.NotFoundException;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
 import java.io.Serializable;
 import java.util.ConcurrentModificationException;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -80,14 +81,13 @@ class QuestionRepository implements Serializable {
         final Long questionId = question.getQuestionId();
         final Question previousQuestion = read(questionId).orElse(null);
         if (previousQuestion == null) {
-            return null; // non-existing questions can't be updated
+            throw new NotFoundException("The question to update does not exist!");
         }
         if (!previousQuestion.getVersion().equals(question.getVersion())) {
             throw new ConcurrentModificationException("You tried to update a question that was modified concurrently!");
         }
-        if (!getAnswers(question.getQuestionId()).isEmpty()) {
-            throw new WebApplicationException("It is not allowed to update questions with votes!",
-                    Response.Status.METHOD_NOT_ALLOWED); // TODO JAX-RS classes should not be used at this level!
+        if (hasAnswers(questionId)) {
+            throw new UnsupportedOperationException("It is not allowed to update questions with votes!");
         }
         final Long version = (long) question.hashCode();
         final Question questionToUpdate = question.toBuilder()
@@ -98,9 +98,8 @@ class QuestionRepository implements Serializable {
     }
 
     void delete(@NonNull final Long questionId) {
-        if (!getAnswers(questionId).isEmpty()) {
-            throw new WebApplicationException("It is not allowed to update questions with votes!",
-                    Response.Status.METHOD_NOT_ALLOWED); // TODO JAX-RS classes should not be used at this level!
+        if (hasAnswers(questionId)) {
+            throw new UnsupportedOperationException("It is not allowed to delete questions with votes!");
         }
         questions.remove(questionId);
     }
@@ -114,8 +113,8 @@ class QuestionRepository implements Serializable {
         return counter.incrementAndGet();
     }
 
-    private AtomicLong getCounter(@NonNull final Long questionId,
-                                  @NonNull final Answer answer) {
+    private AtomicLong getCounter(@NotNull final Long questionId,
+                                  @NotNull final Answer answer) {
         final Map<Answer, AtomicLong> answers = getAnswers(questionId);
         if (!answers.containsKey(answer)) {
             synchronized (answers) {
@@ -125,12 +124,22 @@ class QuestionRepository implements Serializable {
         return answers.get(answer);
     }
 
-    private Map<Answer, AtomicLong> getAnswers(@NonNull final Long questionId) {
+    private Map<Answer, AtomicLong> getAnswers(@NotNull final Long questionId) {
         if (!votes.containsKey(questionId)) {
             synchronized (votes) {
                 votes.putIfAbsent(questionId, new ConcurrentHashMap<>());
             }
         }
         return votes.get(questionId);
+    }
+
+    private Boolean hasAnswers(@NotNull final Long questionId) {
+        return !getAnswers(questionId).isEmpty();
+    }
+
+    Map<Answer, Long> voteResult(@NonNull final Long questionId) {
+        final Map<Answer, Long> result = new EnumMap<>(Answer.class);
+        getAnswers(questionId).forEach((answer, count) -> result.put(answer, count.longValue()));
+        return ImmutableMap.copyOf(result);
     }
 }

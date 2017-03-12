@@ -1,6 +1,6 @@
 /*
  * Moodini
- * Copyright (C) 2016 Marcus Fihlon
+ * Copyright (C) 2016, 2017 Marcus Fihlon
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,6 +24,7 @@ apply plugin: 'kotlin'
 apply plugin: 'war'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
+apply plugin: "org.sonarqube"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -37,8 +38,9 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.1.1'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2.1"
     }
 }
 
@@ -56,18 +58,39 @@ jacocoTestReport {
     }
 }
 
+sonarqube {
+    properties {
+        property "sonar.host.url", "https://sonarqube.com"
+        property "sonar.projectKey", "mcpringle:moodini"
+        property "sonar.projectName", "Moodini"
+        property "sonar.projectVersion", "1.0"
+        property "sonar.sources", "src/main"
+        property "sonar.java.source", "8"
+        property "sonar.sourceEncoding", "UTF-8"
+        property "sonar.junit.reportsPath", "build/test-results/test"
+        property "sonar.jacoco.reportPaths", "build/jacoco/test.exec"
+        property "sonar.github.repository", "McPringle/moodini"
+        property "sonar.links.homepage", "https://www.moodini.ch/"
+        property "sonar.links.ci", "https://travis-ci.org/McPringle/moodini"
+        property "sonar.links.scm", "https://github.com/McPringle/moodini"
+        property "sonar.links.issue", "https://github.com/McPringle/moodini/issues"
+    }
+}
+
 dependencies {
     providedCompile (
             'javax:javaee-api:7.0'                              // amazing microservice framework
     )
     compile (
+            'com.airhacks:jaxrs-cors:0.0.1',                    // setup CORS extension automatically
             'com.google.code.gson:gson:2.8.0',                  // easy to use JSON parser
             'com.google.guava:guava:20.0',                      // tons of utilities
+            'org.jetbrains:annotations:15.0',                   // @NotNull and @Nullable annotations
             'org.projectlombok:lombok:1.16.10',                 // clean-up your source files
             'org.slf4j:slf4j-api:1.7.21',                       // log framework abstraction
             'org.slf4j:slf4j-simple:1.7.21',                    // just logs to the console
             'org.zalando.phrs:jersey-media-json-gson:0.1',      // Jersey GSON entity providers support
-            'pl.setblack:airomem-core:1.0.5'                    // Prevayler based persistence engine
+            'pl.setblack:airomem-core:1.1.0'                    // Prevayler based persistence engine
     )
     testCompile (
             'fish.payara.blue.extras:payara-micro:4.1.1.164',   // embedded application server for integration tests
@@ -84,3 +107,4 @@ dependencies {
             'org.jetbrains.kotlin:kotlin-stdlib-jre8:1.1.1'     // Kotlin standard library
     )
 }
+

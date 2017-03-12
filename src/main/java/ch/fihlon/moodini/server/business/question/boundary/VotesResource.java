@@ -1,6 +1,6 @@
 /*
  * Moodini
- * Copyright (C) 2016 Marcus Fihlon
+ * Copyright (C) 2016, 2017 Marcus Fihlon
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,47 +18,48 @@
 package ch.fihlon.moodini.server.business.question.boundary;
 
 import ch.fihlon.moodini.server.business.question.control.QuestionService;
-import ch.fihlon.moodini.server.business.question.entity.Question;
+import ch.fihlon.moodini.server.business.question.entity.Answer;
 import lombok.NonNull;
 
 import javax.inject.Inject;
-import javax.validation.Valid;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.io.File;
 import java.net.URI;
-import java.util.List;
+import java.util.Map;
 
-@Path("questions")
+@Path("questions/{questionId}/votes")
 @Produces(MediaType.APPLICATION_JSON)
-public class QuestionsResource {
+public class VotesResource {
+
+    private static final String QUESTION_ID = "questionId";
 
     private final QuestionService questionService;
 
     @Inject
-    public QuestionsResource(@NonNull final QuestionService questionService) {
+    public VotesResource(@NonNull final QuestionService questionService) {
         this.questionService = questionService;
     }
 
     @POST
-    public Response create(@NonNull @Valid final Question question,
+    public Response create(@NonNull @PathParam(QUESTION_ID) final Long questionId,
+                           @NonNull final Answer answer,
                            @NonNull @Context final UriInfo info) {
-        final Question createdQuestion = questionService.create(question);
-        final Long questionId = createdQuestion.getQuestionId();
-        final URI uri = info.getAbsolutePathBuilder().path(File.separator + questionId).build();
+        questionService.vote(questionId, answer);
+        final URI uri = info.getAbsolutePath();
         return Response.created(uri).build();
     }
 
     @GET
-    public Response read() {
-        final List<Question> questions = questionService.read();
-        return Response.ok(questions).build();
+    public Response read(@NonNull @PathParam(QUESTION_ID) final Long questionId) {
+        final Map<Answer, Long> result = questionService.voteResult(questionId);
+        return Response.ok(result).build();
     }
 
 }

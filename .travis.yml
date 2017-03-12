@@ -1,37 +1,50 @@
 language: java
 
+sudo: false
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - '$HOME/.gradle/caches'
+    - '$HOME/.gradle/wrapper'
+    - '$HOME/.m2/repository'
+    - '$HOME/.sonar/cache'
+    - '$HOME/.sonar/installs'
+
 jdk:
   - oraclejdk8
+
+services:
+  - docker
 
 addons:
   apt:
     packages:
       - oracle-java8-installer
 
-services:
-  - docker
-
-script: mvn test -P securityAndLicenseCheck
+before_install:
+  - curl -sL https://github.com/jpm4j/jpm4j.installers/raw/master/dist/biz.aQute.jpm.run.jar >jpm4j.jar
+  - java -jar jpm4j.jar -u init
+  - ~/jpm/bin/jpm install com.codacy:codacy-coverage-reporter:assembly
+  - npm install -g bower
+  - bower install -p
 
 after_success:
-  - mvn jacoco:report coveralls:report docker:build
-  - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-  - export REPO=mcpringle/moodini
-  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
-  - docker tag -f $REPO:$COMMIT $REPO:$TAG
-  - docker tag -f $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
-  - docker push $REPO
+  - ~/jpm/bin/codacy-coverage-reporter -l Java -r build/reports/jacoco/test/jacocoTestReport.xml
+  - docker build -t mcpringle/moodini .
+  - docker login -u $DOCKER_USER -p $DOCKER_PASS
+  - docker push mcpringle/moodini
   - docker logout
 
-notifications:
-  webhooks:
-    urls:
-      - https://webhooks.gitter.im/e/b2b7ada590d98c53b19c
-    on_success: always  # options: [always|never|change] default: always
-    on_failure: always  # options: [always|never|change] default: always
-    on_start: always    # options: [always|never|change] default: always
+env:
+  global:
+  - secure: f+rmwtpOD+vdRsjeLG1REGvTG1NMnw94jow00i7sI74+d7wCgxwLT4OyHOQ7nVmHbALS2Um9NxltzV8GsGTbkDOuUbhNR379578inOGWJDdqoz7ROK7ucBoPfCM++sfjL1zwj9gB8XzVObNkYpfSZr6jWCz/18IhLg9gu0WnV1XE+YDyRbKyksJwC0OYAq+9ZSrm0y5HKMB115wVTfSlPwNwRCZFd9vaqYBGKt2Lmi7iVIW5Zmp8QXubSHR5fqueayRENQZJMwvV+sXe33I69F2pJLkERLzn5L6cCPRJXOgFq6VHvjKEWQ8h6TGjJ2iCLNH7ZPDEqz6xoADrMHUMYR8tWLKXaWG5jOAsNt4FMCjKa0V7WkLv9+utoxKmpdVemaknWx3vBnw2ujQaO3d+AMXJY4nwGtk28iwRFqBYDPs2DwD35uH1WL4TSJPq+oaoGbiG+ACqfUXcz9fg3ZgMnh0Pd759CuT3PcW79Wn4qsEGts9TQ47GH+FPswDQoKjS3xmghA6Hh1FpZA6rhGk5DI9yKpONjxhfeVvlfC9JAUcTdCiBAqnUVcuvXc1kPRVWxY17+z6J8ax1ttskWm9svnzdYuRqglbP5A3NIiHwf6OujmGRW1z7IiEtWp0gFMkwIVRcH49hW+/+Gp3IMQPIfGZNGvgcB/VroUbaykN9N+Y=
+  - secure: OpIrSXLd1W9JbaRB/dKoTCcNltPrp6avRCQIhOaFzbsaqzsuIKVwtgmj1Y7zdPphaCtYGkGln68BkGQYGx98zWyUoEq3hQrtdxh/u+g75UazDpKX8g5DvJ6EQLEYfWbpHSbydetY8YBXtXjVEqrAstJMqQ2aAGFFaBYrmRMRasdlVb0o8sI+MxEzRaFt59TARiWcAfbFCFav63Ai8OH+9Mbbeb9Va/PoLt31aT26Z1p2vtzCzMNUyISsULcP2xwOY1hi4/RPprro6k6ytVUGsuBJkkdobnQqpW0H6pAcGTql6SMyiFM8ijWhZupnjnTjPgtTfyHLkFtt2FY/uLPzq1HSYz1NeWWQ+xihUe6wIxys900ky2HtQq60peoU19zzURkMxQP2ur/jBfbaqCBZ65zP8LNNSEpBj4LQ1afd8Y4B6AnmwV6IsiPPotk+jzazTg+HSIv7d6mCdIlvugISHpsO+16CPl8cnbYEjvhY0MOPbVEMUf2w8ynsgZs5Z1QpHU+rWcG0kNPyoqNHH+Lp1XG7MWWaRBkEGYjmYNbNyrRnR8Ap2NSNjiENb4IN1rd3BJQrusU9mvZj8mFaaXUe9oh4K2qj7kRlhhNy5p5HUeIg3DbL1O17VX2SlLwcNyz7BB25NSZ9dtDJb1Qgt9GOaD2r2WQWfz5fei4/mAIETDI=
+  - secure: LxIIOZwlEiwfUnlmTO7G7EjaI7Y8//VnAZRvANEaFHJYJgI6Qo04cJU5mBDQX6IKjhkSbKr0oeazEG6uEoHn6mDe864rhs0e6FR7KqUYW2jyUaSoMB8dAMdRPnVToH+Zjfe1qsXiKxc4ZCAaynp+gvYiEvrrIHfg02/c1IdANcqxUtDIhtRQBHChU2dHdMHBe/r6C2rr6RQuiAfGd9nAs7fYAVlFmb0y5/olTr4txUCw7YJ3xwOzemOgLdUf93aKeV+iw3iRQS3UNMK3os2Ta0Uh3i86ZCFRpxWA+U1stT4XsFkpzECQKOiN/MtX0Z73aqOsioJebms3g7H/DROJPY9zeEN+yAN0Y3nEvVojCCJfDHfqJgh/TFjg5Pp9nA4Xjnym2cNbhE2Zca7UrIEy9267qIHibECzAmdHV+1mJbXGKuqGNktOCfFURNjqpBJhrWIjTv3lQkDAYFyz06VFMxEsUDFtmvepuxDj/4EbkZiVfXRuep8qmzGLgDdqu9hHgK6AWFyjKNmicn40xgLjChPeA8M1dqcj3TvCqwAqqKNmXLtoxDBmHSlRwpkCG3yuvmOQ9nNNxc/Sry8y5jacCCb5xyr7GB+yZKI55WAuPRYRtOiA3EjKuTi0UBL7CvBk4/Hr3Y/nyzEIO838dYxbt27BBDcTE1Y6prNLuqlzmmo=
+  - secure: oyMRfqxvcs2S9iDg2VK4cAYD50iHIa5VED9cktAuR1LI37+9Lvqe4aKI94LZZvxoOnisnqDQ8kaMqLddT3o3f29oq7xWi+MnYYJ5twM/k1UCMmut+WFGAmY/0qegEweIn9xlfwapr1YTyKErtEnwMRzhwVYUMlO1xvB+5LGuzB5QAhe11MMk13Kv9h6MbAmgub+DwN0ZtVYuy+V38K7Atyy9Qs4i8pcW/dFPkxj38FvJn9x+QNttazVbh0VEs3Ms0B51jxMnnaYORvsJe76T4vjYuSh2xIBbbqJZACwQbmRDbcEGmQG34w/SsEqV36kyTeMyNLR1iecmvaDIyBcVAdkEotGSfjE7WB9jk9JL4pybljmTYA43QqQqT4p2GA30mejySx/lwyeRRS0Zeh9pIX21huHjpYfNm/M0dEgD9rbP/KS6YZcWKa3H8UEKeWIM8RyP3m0qELH6/xl9DfVYSePbu+rCJr9yx9/aH/w62UbVmKXikiA9BQT+0oKLeFpSwe8JGRdTMfZ3DzkQidT/22PDVnsXv67ihru1egwPA42j5O7K554U8VXNWKfLEFPq2CtPPGIo93nfu6tM64lHx2FeAsVZk4DB2QhmDwxXBDrinTp7L946uXlnWzHWe2rfQYuU0zZXArDGHDzrHxLelI3gCQEsgDMvKfvvLgXQTIM=
 
-cache:
-  directories:
-  - .autoconf
-  - $HOME/.m2
+script:
+  - ./gradlew check jacocoTestReport coveralls sonarqube -Dsonar.login=$SONAR_TOKEN

@@ -18,8 +18,8 @@
 package ch.fihlon.moodini.server;
 
 import lombok.NonNull;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -27,12 +27,14 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import java.util.ConcurrentModificationException;
 
 import static javax.ws.rs.core.Response.Status.CONFLICT;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
+import static javax.ws.rs.core.Response.Status.METHOD_NOT_ALLOWED;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 
 @Slf4j
@@ -40,42 +42,40 @@ import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 public class RuntimeExceptionMapper implements ExceptionMapper<RuntimeException> {
 
     @Override
-    public Response toResponse(@NonNull final RuntimeException e) {
-        log.error(e.getMessage(), e);
-        return createResponse(handleException(e));
+    public Response toResponse(@NonNull final RuntimeException exception) {
+        log.error(exception.getMessage(), exception);
+        return handleException(exception);
     }
 
-    private ResponseData handleException(@NonNull final Throwable e) {
-        if (e instanceof ConcurrentModificationException) {
-            return new ResponseData(CONFLICT, e.getMessage());
+    private Response handleException(final Throwable throwable) {
+        Response response;
+
+        if (throwable instanceof ConcurrentModificationException) {
+            response = createResponse(CONFLICT, throwable.getMessage());
+        } else if (throwable instanceof NotFoundException) {
+            response = createResponse(NOT_FOUND, throwable.getMessage());
+        } else if (throwable instanceof UnsupportedOperationException) {
+            response = createResponse(METHOD_NOT_ALLOWED, throwable.getMessage());
+        } else if (throwable instanceof WebApplicationException) {
+            final WebApplicationException wae = (WebApplicationException) throwable;
+            response = createResponse(Response.Status.fromStatusCode(wae.getResponse().getStatus()), wae.getMessage());
+        } else if (throwable.getCause() == null) {
+            response = createResponse(INTERNAL_SERVER_ERROR, throwable.getMessage());
+        } else {
+            response = handleException(throwable.getCause());
         }
-        if (e instanceof NotFoundException) {
-            return new ResponseData(NOT_FOUND, e.getMessage());
-        }
-        if (e instanceof WebApplicationException) {
-            final WebApplicationException wae = (WebApplicationException) e;
-            return new ResponseData(Response.Status.fromStatusCode(wae.getResponse().getStatus()), wae.getMessage());
-        }
-        if (e.getCause() != null) {
-            return handleException(e.getCause());
-        }
-        return new ResponseData(INTERNAL_SERVER_ERROR, e.getMessage());
+
+        return response;
     }
 
-    private Response createResponse(@NonNull ResponseData responseData) {
+    private Response createResponse(@NotNull final Status status, @NotNull final String message) {
         final JsonObject entity = Json.createObjectBuilder()
-                .add("status", responseData.getStatus().getStatusCode())
-                .add("message", responseData.getMessage())
+                .add("status", status.getStatusCode())
+                .add("message", message)
                 .build();
-        return Response.status(responseData.getStatus())
+        return Response.status(status)
                 .type(MediaType.APPLICATION_JSON)
                 .entity(entity).build();
-    }
-
-    @Value
-    private class ResponseData {
-        private Response.Status status;
-        private String message;
     }
 
 }

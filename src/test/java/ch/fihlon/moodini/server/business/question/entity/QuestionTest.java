@@ -20,6 +20,7 @@ package ch.fihlon.moodini.server.business.question.entity;
 import org.junit.Before;
 import org.junit.Test;
 
+import static java.lang.Boolean.TRUE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -31,6 +32,8 @@ public class QuestionTest {
     private static final Long QUESTION_ID = 1L;
     private static final Long VERSION = 1L;
     private static final String TEXT = "Test";
+    private static final String TO_STRING = String.format("Question(questionId=%d, version=%d, text=%s)",
+            QUESTION_ID, VERSION, TEXT);
 
     private Question question;
 
@@ -56,6 +59,22 @@ public class QuestionTest {
     @Test
     public void getQuestion() {
         assertThat("Got the wrong text!", question.getText(), is(TEXT));
+    }
+
+    @Test
+    public void testToString() {
+        assertThat("ToString is not working!", question.toString(), is(TO_STRING));
+    }
+
+    @Test
+    public void testEquals() {
+        final Question otherQuestion = question.toBuilder().version(2L).build();
+        assertThat("Equals is not working!", question.equals(otherQuestion), is(TRUE));
+    }
+
+    @Test
+    public void testHashCode() {
+        assertThat("HashCode is not working!", question.hashCode(), is(2606726));
     }
 
 }

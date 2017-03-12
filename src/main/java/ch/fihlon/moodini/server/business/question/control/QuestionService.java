@@ -1,6 +1,6 @@
 /*
  * Moodini
- * Copyright (C) 2016 Marcus Fihlon
+ * Copyright (C) 2016, 2017 Marcus Fihlon
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,7 +20,7 @@ package ch.fihlon.moodini.server.business.question.control;
 import ch.fihlon.moodini.server.PersistenceManager;
 import ch.fihlon.moodini.server.business.question.entity.Answer;
 import ch.fihlon.moodini.server.business.question.entity.Question;
-import pl.setblack.airomem.core.SimpleController;
+import pl.setblack.airomem.core.PersistenceController;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -28,6 +28,7 @@ import javax.inject.Singleton;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.NotFoundException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -36,11 +37,11 @@ import java.util.Optional;
 @Singleton
 public class QuestionService {
 
-    private SimpleController<QuestionRepository> controller;
+    private PersistenceController<QuestionRepository> controller;
 
     @PostConstruct
     public void setupResources() {
-        this.controller = PersistenceManager.createSimpleController(Question.class, QuestionRepository::new);
+        this.controller = PersistenceManager.createController(Question.class, QuestionRepository::new);
     }
 
     @PreDestroy
@@ -55,7 +56,7 @@ public class QuestionService {
      * @return the new {@link Question}
      */
     public Question create(@NotNull final Question question) {
-        return controller.executeAndQuery((ctrl) -> ctrl.create(question));
+        return controller.executeAndQuery(ctrl -> ctrl.create(question));
     }
 
     /**
@@ -67,7 +68,7 @@ public class QuestionService {
     public Question update(@NotNull final Question question) {
         final Long questionId = question.getQuestionId();
         read(questionId).orElseThrow(NotFoundException::new);
-        return controller.executeAndQuery((ctrl) -> ctrl.update(question));
+        return controller.executeAndQuery(ctrl -> ctrl.update(question));
     }
 
     /**
@@ -77,7 +78,7 @@ public class QuestionService {
      * @return the {@link Question}
      */
     public Optional<Question> read(@NotNull final Long questionId) {
-        return controller.readOnly().read(questionId);
+        return controller.query(ctrl -> ctrl.read(questionId));
     }
 
     /**
@@ -86,7 +87,7 @@ public class QuestionService {
      * @return a {@link List} of all {@link Question}s
      */
     public List<Question> read() {
-        return controller.readOnly().readAll();
+        return controller.query(QuestionRepository::readAll);
     }
 
     /**
@@ -95,7 +96,7 @@ public class QuestionService {
      * @return the latest {@link Question}
      */
     public Question readLatest() {
-        final Optional<Question> optional = controller.readOnly().readLatest();
+        final Optional<Question> optional = controller.query(QuestionRepository::readLatest);
         return optional.orElseThrow(NotFoundException::new);
     }
 
@@ -106,7 +107,7 @@ public class QuestionService {
      */
     public void delete(@NotNull final Long questionId) {
         read(questionId).orElseThrow(NotFoundException::new);
-        controller.execute((ctrl) -> ctrl.delete(questionId));
+        controller.execute(ctrl -> ctrl.delete(questionId));
     }
 
     /**
@@ -119,6 +120,18 @@ public class QuestionService {
     public Long vote(@NotNull final Long questionId,
                      @NotNull final Answer answer) {
         read(questionId).orElseThrow(NotFoundException::new);
-        return controller.executeAndQuery((ctrl) -> ctrl.vote(questionId, answer));
+        return controller.executeAndQuery(ctrl -> ctrl.vote(questionId, answer));
     }
+
+    /**
+     * Get the vote results for the {@link Question} with the specified id.
+     *
+     * @param questionId the id of a {@link Question}
+     * @return the vote results for this {@link Question}
+     */
+    public Map<Answer, Long> voteResult(@NotNull final Long questionId) {
+        read(questionId).orElseThrow(NotFoundException::new);
+        return controller.executeAndQuery(ctrl -> ctrl.voteResult(questionId));
+    }
+
 }

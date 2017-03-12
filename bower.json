@@ -1,0 +1,14 @@
+{
+  "name": "moodini",
+  "homepage": "https://github.com/McPringle/moodini",
+  "authors": [
+    "Marcus Fihlon <marcus@fihlon.ch>"
+  ],
+  "description": "An easy to use mood application.",
+  "main": "index.html",
+  "license": "AGPL",
+  "private": true,
+  "dependencies": {
+    "jquery": "^3.1.1"
+  }
+}
