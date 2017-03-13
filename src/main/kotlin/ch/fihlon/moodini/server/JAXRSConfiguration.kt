@@ -1,6 +1,6 @@
 /*
  * Moodini
- * Copyright (C) 2016 Marcus Fihlon
+ * Copyright (C) 2016-2017 Marcus Fihlon
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,11 +15,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.fihlon.moodini.server;
+package ch.fihlon.moodini.server
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
+import javax.ws.rs.ApplicationPath
+import javax.ws.rs.core.Application
 
 @ApplicationPath("/api")
-public class JAXRSConfiguration extends Application {
-}
+class JAXRSConfiguration : Application()
