@@ -15,21 +15,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.fihlon.moodini.server.support.healthcheck.boundary;
+package ch.fihlon.moodini.server.support.healthcheck.boundary
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.GET
+import javax.ws.rs.Path
+import javax.ws.rs.Produces
+import javax.ws.rs.core.MediaType
+import javax.ws.rs.core.Response
 
 @Path("healthcheck")
 @Produces(MediaType.TEXT_PLAIN)
-public class HealthCheckResource {
+class HealthCheckResource {
 
     @GET
-    public Response healthCheck() {
-        return Response.ok("up and running").build();
+    fun healthCheck(): Response {
+        return Response.ok("up and running").build()
     }
 
 }
