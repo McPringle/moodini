@@ -1,6 +1,6 @@
 /*
  * Moodini
- * Copyright (C) 2016 Marcus Fihlon
+ * Copyright (C) 2016-2017 Marcus Fihlon
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,27 +15,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.fihlon.moodini.server.business.question.entity;
+package ch.fihlon.moodini.server.business.question.entity
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
+import java.io.Serializable
 
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
+data class Question (val questionId: Long = 0L, val version: Long = 0L, val text: String) : Serializable {
 
-@Value
-@Builder(toBuilder = true)
-@EqualsAndHashCode(exclude={"version"})
-public class Question implements Serializable {
+    override fun equals(other: Any?): Boolean {
+        if (other is Question) {
+            return other.questionId == questionId && other.text == text
+        }
+        return super.equals(other)
+    }
 
-    private static final long serialVersionUID = 1L;
-
-    private Long questionId;
-
-    private Long version;
-
-    @NotNull
-    private String text;
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 
 }
