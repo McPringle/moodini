@@ -1,6 +1,6 @@
 /*
  * Moodini
- * Copyright (C) 2016 Marcus Fihlon
+ * Copyright (C) 2016-2017 Marcus Fihlon
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,16 +15,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.fihlon.moodini.server.business.question.entity;
+package ch.fihlon.moodini.server.business.question.entity
 
-import java.io.Serializable;
+import java.io.Serializable
 
-public enum Answer implements Serializable {
+enum class Answer : Serializable {
 
     AMPED,
     GOOD,
     FINE,
     MEH,
-    PISSED;
+    PISSED
 
 }
