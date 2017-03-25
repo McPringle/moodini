@@ -15,29 +15,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.fihlon.moodini.server.support.healthcheck.boundary;
+package ch.fihlon.moodini.server.support.healthcheck.boundary
 
-import org.junit.Test;
+import org.junit.Test
 
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.`is`
 
-public class HealthCheckResourceTest {
+class HealthCheckResourceTest {
 
     @Test
-    public void healthCheck() {
+    fun healthCheck() {
         // arrange
-        final String expected = "up and running";
-        final HealthCheckResource resource = new HealthCheckResource();
+        val expected = "up and running"
+        val resource = HealthCheckResource()
 
         // act
-        final Response response = resource.healthCheck();
+        val response = resource.healthCheck()
 
         // assert
-        assertThat(response.getStatus(), is(200));
-        assertThat(response.getEntity(), is(expected));
+        assertThat(response.status, `is`(200))
+        assertThat(response.entity, `is`<Any>(expected))
     }
 
 }
