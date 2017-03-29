@@ -33,11 +33,14 @@ repositories {
 }
 
 buildscript {
+    ext {
+        kotlinVersion = '1.1.1'
+    }
     repositories {
         jcenter()
     }
     dependencies {
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.1.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2.1"
     }
@@ -81,8 +84,6 @@ dependencies {
             'javax:javaee-api:7.0'                              // amazing microservice framework
     )
     compile (
-            'org.jetbrains.kotlin:kotlin-stdlib-jre8:1.1.1',    // Kotlin standard library
-            'org.jetbrains.kotlin:kotlin-reflect:1.1.1',        // Kotlin reflection library
             'io.github.microutils:kotlin-logging:1.4.3',        // Kotlin logging with SLF4J
             'com.airhacks:jaxrs-cors:0.0.1',                    // setup CORS extension automatically
             'com.google.code.gson:gson:2.8.0',                  // easy to use JSON parser
@@ -92,6 +93,8 @@ dependencies {
             'org.slf4j:slf4j-simple:1.7.21',                    // just logs to the console
             'org.zalando.phrs:jersey-media-json-gson:0.1',      // Jersey GSON entity providers support
             'pl.setblack:airomem-core:1.1.0'                    // Prevayler based persistence engine
+            "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion", // Kotlin standard library
+            "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",     // Kotlin reflection library
     )
     testCompile (
             'fish.payara.blue.extras:payara-micro:4.1.1.164',   // embedded application server for integration tests
