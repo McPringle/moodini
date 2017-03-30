@@ -51,8 +51,8 @@ war {
 }
 
 jacocoTestReport {
-    group = "Reporting"
-    description = "Generate Jacoco coverage reports after running tests."
+    group = 'Reporting'
+    description = 'Generate Jacoco coverage reports after running tests.'
     additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
     reports {
         xml.enabled = true // coveralls plugin depends on xml format report
@@ -62,20 +62,20 @@ jacocoTestReport {
 
 sonarqube {
     properties {
-        property "sonar.host.url", "https://sonarqube.com"
-        property "sonar.projectKey", "mcpringle:moodini"
-        property "sonar.projectName", "Moodini"
-        property "sonar.projectVersion", "1.0"
-        property "sonar.sources", "src/main"
-        property "sonar.java.source", "8"
-        property "sonar.sourceEncoding", "UTF-8"
-        property "sonar.junit.reportsPath", "build/test-results/test"
-        property "sonar.jacoco.reportPaths", "build/jacoco/test.exec"
-        property "sonar.github.repository", "McPringle/moodini"
-        property "sonar.links.homepage", "https://www.moodini.ch/"
-        property "sonar.links.ci", "https://travis-ci.org/McPringle/moodini"
-        property "sonar.links.scm", "https://github.com/McPringle/moodini"
-        property "sonar.links.issue", "https://github.com/McPringle/moodini/issues"
+        property 'sonar.host.url', 'https://sonarqube.com'
+        property 'sonar.projectKey', 'mcpringle:moodini'
+        property 'sonar.projectName', 'Moodini'
+        property 'sonar.projectVersion', '1.0'
+        property 'sonar.sources', 'src/main'
+        property 'sonar.java.source', '8'
+        property 'sonar.sourceEncoding', 'UTF-8'
+        property 'sonar.junit.reportsPath', 'build/test-results/test'
+        property 'sonar.jacoco.reportPaths', 'build/jacoco/test.exec'
+        property 'sonar.github.repository', 'McPringle/moodini'
+        property 'sonar.links.homepage', 'https://www.moodini.ch/'
+        property 'sonar.links.ci', 'https://travis-ci.org/McPringle/moodini'
+        property 'sonar.links.scm', 'https://github.com/McPringle/moodini'
+        property 'sonar.links.issue', 'https://github.com/McPringle/moodini/issues'
     }
 }
 
