@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicLong
 import javax.ws.rs.NotFoundException
 
 /**
- * This class is the repository of [Question]s.
+ * This class is the repository for [Question]s.
  * It represents the persistence layer.
  */
 object QuestionRepository : Serializable {
