@@ -21,6 +21,7 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'kotlin'
 apply plugin: 'kotlin-allopen'
+apply plugin: 'kotlin-noarg'
 apply plugin: 'war'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
@@ -43,6 +44,7 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlinVersion"
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2.1"
     }
@@ -50,6 +52,10 @@ buildscript {
 
 allOpen {
     annotation('javax.ejb.Stateless')
+    annotation('javax.ws.rs.Path')
+}
+
+noArg {
     annotation('javax.ws.rs.Path')
 }
 
