@@ -1,6 +1,6 @@
 /*
  * Moodini
- * Copyright (C) 2016, 2017 Marcus Fihlon
+ * Copyright (C) 2016-2017 Marcus Fihlon
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,11 +19,13 @@
 group 'ch.fihlon.moodini'
 version '1.0-SNAPSHOT'
 
-apply plugin: 'java'
+apply plugin: 'kotlin'
+apply plugin: 'kotlin-allopen'
+apply plugin: 'kotlin-noarg'
 apply plugin: 'war'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
-apply plugin: "org.sonarqube"
+apply plugin: 'org.sonarqube'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -33,13 +35,28 @@ repositories {
 }
 
 buildscript {
+    ext {
+        kotlinVersion = '1.1.1'
+    }
     repositories {
         jcenter()
     }
     dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlinVersion"
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2.1"
     }
+}
+
+allOpen {
+    annotation('javax.ejb.Stateless')
+    annotation('javax.ws.rs.Path')
+}
+
+noArg {
+    annotation('javax.ws.rs.Path')
 }
 
 war {
@@ -47,8 +64,8 @@ war {
 }
 
 jacocoTestReport {
-    group = "Reporting"
-    description = "Generate Jacoco coverage reports after running tests."
+    group = 'Reporting'
+    description = 'Generate Jacoco coverage reports after running tests.'
     additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
     reports {
         xml.enabled = true // coveralls plugin depends on xml format report
@@ -58,20 +75,20 @@ jacocoTestReport {
 
 sonarqube {
     properties {
-        property "sonar.host.url", "https://sonarqube.com"
-        property "sonar.projectKey", "mcpringle:moodini"
-        property "sonar.projectName", "Moodini"
-        property "sonar.projectVersion", "1.0"
-        property "sonar.sources", "src/main"
-        property "sonar.java.source", "8"
-        property "sonar.sourceEncoding", "UTF-8"
-        property "sonar.junit.reportsPath", "build/test-results/test"
-        property "sonar.jacoco.reportPaths", "build/jacoco/test.exec"
-        property "sonar.github.repository", "McPringle/moodini"
-        property "sonar.links.homepage", "https://www.moodini.ch/"
-        property "sonar.links.ci", "https://travis-ci.org/McPringle/moodini"
-        property "sonar.links.scm", "https://github.com/McPringle/moodini"
-        property "sonar.links.issue", "https://github.com/McPringle/moodini/issues"
+        property 'sonar.host.url', 'https://sonarqube.com'
+        property 'sonar.projectKey', 'mcpringle:moodini'
+        property 'sonar.projectName', 'Moodini'
+        property 'sonar.projectVersion', '1.0'
+        property 'sonar.sources', 'src/main'
+        property 'sonar.java.source', '8'
+        property 'sonar.sourceEncoding', 'UTF-8'
+        property 'sonar.junit.reportsPath', 'build/test-results/test'
+        property 'sonar.jacoco.reportPaths', 'build/jacoco/test.exec'
+        property 'sonar.github.repository', 'McPringle/moodini'
+        property 'sonar.links.homepage', 'https://www.moodini.ch/'
+        property 'sonar.links.ci', 'https://travis-ci.org/McPringle/moodini'
+        property 'sonar.links.scm', 'https://github.com/McPringle/moodini'
+        property 'sonar.links.issue', 'https://github.com/McPringle/moodini/issues'
     }
 }
 
@@ -80,15 +97,17 @@ dependencies {
             'javax:javaee-api:7.0'                              // amazing microservice framework
     )
     compile (
+            'io.github.microutils:kotlin-logging:1.4.3',        // Kotlin logging with SLF4J
             'com.airhacks:jaxrs-cors:0.0.1',                    // setup CORS extension automatically
             'com.google.code.gson:gson:2.8.0',                  // easy to use JSON parser
             'com.google.guava:guava:20.0',                      // tons of utilities
             'org.jetbrains:annotations:15.0',                   // @NotNull and @Nullable annotations
-            'org.projectlombok:lombok:1.16.10',                 // clean-up your source files
             'org.slf4j:slf4j-api:1.7.21',                       // log framework abstraction
             'org.slf4j:slf4j-simple:1.7.21',                    // just logs to the console
             'org.zalando.phrs:jersey-media-json-gson:0.1',      // Jersey GSON entity providers support
             'pl.setblack:airomem-core:1.1.0'                    // Prevayler based persistence engine
+            "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion", // Kotlin standard library
+            "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",     // Kotlin reflection library
     )
     testCompile (
             'fish.payara.blue.extras:payara-micro:4.1.1.164',   // embedded application server for integration tests
@@ -102,3 +121,4 @@ dependencies {
             'org.powermock:powermock-module-junit4:1.6.6'       // Ugly: Mock static stuff
     )
 }
+
