@@ -26,14 +26,10 @@ addons:
       - oracle-java8-installer
 
 before_install:
-  - curl -sL https://github.com/jpm4j/jpm4j.installers/raw/master/dist/biz.aQute.jpm.run.jar >jpm4j.jar
-  - java -jar jpm4j.jar -u init
-  - ~/jpm/bin/jpm install com.codacy:codacy-coverage-reporter:assembly
   - npm install -g bower
   - bower install -p
 
 after_success:
-  - ~/jpm/bin/codacy-coverage-reporter -l Java -r build/reports/jacoco/test/jacocoTestReport.xml
   - docker build -t mcpringle/moodini .
   - docker login -u $DOCKER_USER -p $DOCKER_PASS
   - docker push mcpringle/moodini
@@ -47,4 +43,4 @@ env:
   - secure: oyMRfqxvcs2S9iDg2VK4cAYD50iHIa5VED9cktAuR1LI37+9Lvqe4aKI94LZZvxoOnisnqDQ8kaMqLddT3o3f29oq7xWi+MnYYJ5twM/k1UCMmut+WFGAmY/0qegEweIn9xlfwapr1YTyKErtEnwMRzhwVYUMlO1xvB+5LGuzB5QAhe11MMk13Kv9h6MbAmgub+DwN0ZtVYuy+V38K7Atyy9Qs4i8pcW/dFPkxj38FvJn9x+QNttazVbh0VEs3Ms0B51jxMnnaYORvsJe76T4vjYuSh2xIBbbqJZACwQbmRDbcEGmQG34w/SsEqV36kyTeMyNLR1iecmvaDIyBcVAdkEotGSfjE7WB9jk9JL4pybljmTYA43QqQqT4p2GA30mejySx/lwyeRRS0Zeh9pIX21huHjpYfNm/M0dEgD9rbP/KS6YZcWKa3H8UEKeWIM8RyP3m0qELH6/xl9DfVYSePbu+rCJr9yx9/aH/w62UbVmKXikiA9BQT+0oKLeFpSwe8JGRdTMfZ3DzkQidT/22PDVnsXv67ihru1egwPA42j5O7K554U8VXNWKfLEFPq2CtPPGIo93nfu6tM64lHx2FeAsVZk4DB2QhmDwxXBDrinTp7L946uXlnWzHWe2rfQYuU0zZXArDGHDzrHxLelI3gCQEsgDMvKfvvLgXQTIM=
 
 script:
-  - ./gradlew check jacocoTestReport coveralls sonarqube -Dsonar.login=$SONAR_TOKEN
+  - ./gradlew check jacocoTestReport sonarqube -Dsonar.login=$SONAR_TOKEN
