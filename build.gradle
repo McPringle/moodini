@@ -105,7 +105,6 @@ dependencies {
             'org.slf4j:slf4j-api:1.7.21',                       // log framework abstraction
             'org.slf4j:slf4j-simple:1.7.21',                    // just logs to the console
             'org.zalando.phrs:jersey-media-json-gson:0.1',      // Jersey GSON entity providers support
-            'pl.setblack:airomem-core:1.1.0',                   // Prevayler based persistence engine
             "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion", // Kotlin standard library
             "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"     // Kotlin reflection library
     )
