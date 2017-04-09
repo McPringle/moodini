@@ -109,15 +109,6 @@ dependencies {
             "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"     // Kotlin reflection library
     )
     testCompile (
-            'fish.payara.blue.extras:payara-micro:4.1.1.164',   // embedded application server for integration tests
-            'io.rest-assured:rest-assured:3.0.1',               // Java DSL for easy testing of REST services
-            'junit:junit:4.12',                                 // THE testing framework
-            'org.hamcrest:java-hamcrest:2.0.0.0',               // write flexible assertions
-            'org.mockito:mockito-core:1.10.19',                 // best mocking framework ever (PowerMock: no v2!)
-            'org.needle4j:needle4j:2.3',                        // testing Java EE components
-            'org.powermock:powermock-api-mockito:1.6.6',        // Ugly: Mock static stuff
-            'org.powermock:powermock-core:1.6.6',               // Ugly: Mock static stuff
-            'org.powermock:powermock-module-junit4:1.6.6'       // Ugly: Mock static stuff
     )
 }
 
