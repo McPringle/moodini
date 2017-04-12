@@ -94,19 +94,18 @@ sonarqube {
 
 dependencies {
     providedCompile (
-            'javax:javaee-api:7.0'                              // amazing microservice framework
+            'javax:javaee-api:7.0'                                    // amazing microservice framework
     )
     compile (
-            'io.github.microutils:kotlin-logging:1.4.3',        // Kotlin logging with SLF4J
-            'com.airhacks:jaxrs-cors:0.0.1',                    // setup CORS extension automatically
-            'com.google.code.gson:gson:2.8.0',                  // easy to use JSON parser
-            'org.slf4j:slf4j-api:1.7.21',                       // log framework abstraction
-            'org.slf4j:slf4j-simple:1.7.21',                    // just logs to the console
-            'org.zalando.phrs:jersey-media-json-gson:0.1',      // Jersey GSON entity providers support
+            'io.github.microutils:kotlin-logging:1.4.3',              // Kotlin logging with SLF4J
+            'com.airhacks:jaxrs-cors:0.0.1',                          // setup CORS extension automatically
+            'com.google.code.gson:gson:2.8.0',                        // easy to use JSON parser
+            "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",     // Kotlin reflection library
             "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion", // Kotlin standard library
-            "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"     // Kotlin reflection library
-    )
-    testCompile (
+            'org.litote.kmongo:kmongo:3.3.5',                         // Kotlin MongoDB abstraction
+            'org.slf4j:slf4j-api:1.7.21',                             // log framework abstraction
+            'org.slf4j:slf4j-simple:1.7.21',                          // just logs to the console
+            'org.zalando.phrs:jersey-media-json-gson:0.1'             // Jersey GSON entity providers support
     )
 }
 
