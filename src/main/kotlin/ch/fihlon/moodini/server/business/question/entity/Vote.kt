@@ -19,11 +19,11 @@ package ch.fihlon.moodini.server.business.question.entity
 
 import org.litote.kmongo.MongoId
 
-data class Question (@MongoId val questionId: String?, val version: Int = 0, val text: String) {
+data class Vote (@MongoId val voteId: String?, val questionId: String, val answer: Answer) {
 
     override fun equals(other: Any?): Boolean {
-        if (other is Question) {
-            return other.questionId == questionId && other.text == text
+        if (other is Vote) {
+            return other.questionId == questionId && other.answer == answer
         }
         return super.equals(other)
     }

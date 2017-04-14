@@ -17,9 +17,7 @@
  */
 package ch.fihlon.moodini.server.business.question.entity
 
-import java.io.Serializable
-
-enum class Answer : Serializable {
+enum class Answer {
 
     AMPED,
     GOOD,
