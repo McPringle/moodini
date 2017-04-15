@@ -17,17 +17,13 @@
  */
 package ch.fihlon.moodini.server.business.question.control
 
-import ch.fihlon.moodini.server.PersistenceManager
-import ch.fihlon.moodini.server.business.question.entity.Answer
+import ch.fihlon.moodini.server.PersistenceManager.createMongoCollection
 import ch.fihlon.moodini.server.business.question.entity.Question
-import pl.setblack.airomem.core.Query
-import java.io.Serializable
-import java.util.Optional
-import java.util.function.Supplier
-import javax.annotation.PreDestroy
+import org.litote.kmongo.deleteOneById
+import org.litote.kmongo.findOneById
+import org.litote.kmongo.updateOne
+import java.util.ConcurrentModificationException
 import javax.inject.Singleton
-import javax.ws.rs.NotFoundException
-import kotlin.reflect.KClass
 
 /**
  * This singleton is a service for working with [Question]s.
@@ -35,12 +31,7 @@ import kotlin.reflect.KClass
 @Singleton
 class QuestionService {
 
-    private val controller = PersistenceManager.createController(Question::class as KClass<Serializable>, Supplier { QuestionRepository })
-
-    @PreDestroy
-    fun cleanupResources() {
-        this.controller.close()
-    }
+    private val collection = createMongoCollection<Question>()
 
     /**
      * Create a new [Question].
@@ -50,7 +41,9 @@ class QuestionService {
      * @return the new [Question]
      */
     fun create(question: Question): Question {
-        return controller.executeAndQuery({ ctrl -> ctrl.create(question) })
+        val newQuestion = question.copy(questionId = null, version = question.hashCode())
+        collection.insertOne(newQuestion)
+        return newQuestion
     }
 
     /**
@@ -61,9 +54,11 @@ class QuestionService {
      * @return the updated [Question]
      */
     fun update(question: Question): Question {
-        val questionId = question.questionId
-        read(questionId).orElseThrow<NotFoundException>(Supplier<NotFoundException> { NotFoundException() })
-        return controller.executeAndQuery({ ctrl -> ctrl.update(question) })
+        if (question.version != read(question.questionId!!)?.version) throw ConcurrentModificationException(
+                "The question with id '${question.questionId}' was modified concurrently!")
+        val newQuestion = question.copy(version = question.hashCode())
+        collection.updateOne(newQuestion)
+        return newQuestion
     }
 
     /**
@@ -73,8 +68,8 @@ class QuestionService {
      * *
      * @return the [Question]
      */
-    fun read(questionId: Long): Optional<Question> {
-        return controller.query({ ctrl -> ctrl.read(questionId) })
+    fun read(questionId: String): Question? {
+        return collection.findOneById(questionId)
     }
 
     /**
@@ -83,17 +78,7 @@ class QuestionService {
      * @return a [List] of all [Question]s
      */
     fun read(): List<Question> {
-        return controller.query(Query { it.readAll() })
-    }
-
-    /**
-     * Read (get) the latest (newest) [Question].
-
-     * @return the latest [Question]
-     */
-    fun readLatest(): Question {
-        val optional = controller.query({ ctrl -> ctrl.readLatest() })
-        return optional.orElseThrow(Supplier<NotFoundException> { NotFoundException() })
+        return collection.find().toList()
     }
 
     /**
@@ -102,35 +87,7 @@ class QuestionService {
      * @param questionId the id of a [Question]
      */
     fun delete(questionId: Long) {
-        read(questionId).orElseThrow<NotFoundException>(Supplier<NotFoundException> { NotFoundException() })
-        controller.execute({ ctrl -> ctrl.delete(questionId) })
-    }
-
-    /**
-     * Vote for an [Answer] of the [Question] with the specified id.
-
-     * @param questionId the id of a [Question]
-     * *
-     * @param answer the [Answer]
-     * *
-     * @return the number of votes for this [Answer]
-     */
-    fun vote(questionId: Long,
-             answer: Answer): Long {
-        read(questionId).orElseThrow<NotFoundException>(Supplier<NotFoundException> { NotFoundException() })
-        return controller.executeAndQuery({ ctrl -> ctrl.vote(questionId, answer) }).toLong()
-    }
-
-    /**
-     * Get the vote results for the [Question] with the specified id.
-
-     * @param questionId the id of a [Question]
-     * *
-     * @return the vote results for this [Question]
-     */
-    fun voteResult(questionId: Long): Map<Answer, Long> {
-        read(questionId).orElseThrow<NotFoundException>(Supplier<NotFoundException> { NotFoundException() })
-        return controller.executeAndQuery({ ctrl -> ctrl.voteResult(questionId) })
+        collection.deleteOneById(questionId)
     }
 
 }
