@@ -17,30 +17,17 @@
  */
 package ch.fihlon.moodini.server
 
-import mu.KotlinLogging
-import pl.setblack.airomem.core.PersistenceController
-import pl.setblack.airomem.core.builders.PrevaylerBuilder
-import java.io.Serializable
-import java.nio.file.Paths
-import java.util.function.Supplier
-import kotlin.reflect.KClass
+import com.mongodb.client.MongoCollection
+import org.litote.kmongo.KMongo
+import org.litote.kmongo.getCollection
 
 object PersistenceManager {
 
-    private val logger = KotlinLogging.logger {}
+    val client = KMongo.createClient("database")
+    val database = client.getDatabase("moodini")
 
-    fun <T : Serializable> createController(
-            clazz: KClass<Serializable>, constructor: Supplier<T>): PersistenceController<T> {
-
-        val homeDir = System.getProperty("user.home")
-        val path = Paths.get(homeDir, ".moodini", "data", clazz.qualifiedName)
-        logger.info("Using persistence store '{}' for entity '{}'.", path, clazz.qualifiedName)
-
-        return PrevaylerBuilder
-                .newBuilder<T>()
-                .withFolder(path)
-                .useSupplier(constructor)
-                .build()
+    inline fun <reified T : Any>  createMongoCollection(): MongoCollection<T> {
+        return database.getCollection<T>()
     }
 
 }
