@@ -13,6 +13,18 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+## Configuration
+
+*Moodini* uses [MongoDB](https://wikipedia.org/wiki/MongoDB) to store it's data. Therefore you must provide the credentials for a running database instance through environment variables:
+
+| Environment Variable | Description |
+| -------------------- | ------------- |
+| db_username          | The name of the user (login) for authorization. |
+| db_password          | The password used to authorize the user. |
+| db_host              | The host which runs the MongoDB instance |
+| db_port              | The port which provides access to the MongoDB server. |
+| db_name              | The name of the database to be used by *Moodini*. |
+
 ## Throughput
 
 [![Throughput Graph](https://graphs.waffle.io/mcpringle/moodini/throughput.svg)](https://waffle.io/mcpringle/moodini/metrics/throughput)

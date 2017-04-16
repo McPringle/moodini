@@ -17,14 +17,28 @@
  */
 package ch.fihlon.moodini.server
 
+import com.mongodb.MongoClientURI
 import com.mongodb.client.MongoCollection
+import com.mongodb.client.MongoDatabase
 import org.litote.kmongo.KMongo
 import org.litote.kmongo.getCollection
 
 object PersistenceManager {
 
-    val client = KMongo.createClient("database")
-    val database = client.getDatabase("moodini")
+    val database: MongoDatabase
+
+    init {
+        val db_username = System.getenv("db_username")
+        val db_password = System.getenv("db_password")
+        val db_host = System.getenv("db_host")
+        val db_port = System.getenv("db_port")
+        val db_name = System.getenv("db_name")
+
+        val db_uri = MongoClientURI("mongodb://${db_username}:${db_password}@${db_host}:${db_port}/${db_name}")
+        val client = KMongo.createClient(db_uri)
+
+        database = client.getDatabase("moodini")
+    }
 
     inline fun <reified T : Any>  createMongoCollection(): MongoCollection<T> {
         return database.getCollection<T>()
