@@ -39,7 +39,8 @@ constructor(private val questionService: QuestionService) {
     @POST
     fun create(@Valid question: Question,
                @Context info: UriInfo): Response {
-        val (questionId) = questionService.create(question)
+        val newQuestion = questionService.create(question)
+        val questionId = newQuestion.questionId
         val uri = info.absolutePathBuilder.path(File.separator + questionId).build()
         return Response.created(uri).build()
     }

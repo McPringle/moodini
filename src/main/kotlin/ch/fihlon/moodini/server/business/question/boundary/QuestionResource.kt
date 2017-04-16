@@ -39,35 +39,26 @@ class QuestionResource @Inject
 constructor(private val questionService: QuestionService) {
 
     @GET
-    fun read(@PathParam(QUESTION_ID) value: String): Response {
-        return if ("latest".equals(value, ignoreCase = true))
-            Response.ok(questionService.readLatest()).build()
-        else
-            read(java.lang.Long.parseLong(value))
-    }
-
-    fun read(@PathParam(QUESTION_ID) questionId: Long): Response {
+    fun read(@PathParam(QUESTION_ID) questionId: String): Response {
         val question = questionService.read(questionId)
-        if (question.isPresent) {
-            return Response.ok(question.get()).build()
-        }
-        throw NotFoundException(String.format("Question with id '%d' not found.", questionId))
+        return if (question != null)
+            Response.ok(question).build()
+        else
+            throw NotFoundException("Question with id '${questionId}' not found.")
     }
 
     @PUT
-    fun update(@PathParam(QUESTION_ID) questionId: Long,
+    fun update(@PathParam(QUESTION_ID) questionId: String,
                @Valid question: Question,
                @Context info: UriInfo): Response {
-        read(questionId) // only update existing questions
         val questionToUpdate = question.copy(questionId = questionId)
-        val updatedQuestion = questionService.update(questionToUpdate)
+        val newQuestion = questionService.update(questionToUpdate)
         val uri = info.absolutePath
-        return Response.ok(updatedQuestion).header("Location", uri.toString()).build()
+        return Response.ok(newQuestion).header("Location", uri.toString()).build()
     }
 
     @DELETE
     fun delete(@PathParam(QUESTION_ID) questionId: Long): Response {
-        read(questionId) // only delete existing questions
         questionService.delete(questionId)
         return Response.noContent().build()
     }

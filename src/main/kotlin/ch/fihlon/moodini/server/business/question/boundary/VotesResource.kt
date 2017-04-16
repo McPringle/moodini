@@ -17,9 +17,11 @@
  */
 package ch.fihlon.moodini.server.business.question.boundary
 
-import ch.fihlon.moodini.server.business.question.control.QuestionService
-import ch.fihlon.moodini.server.business.question.entity.Answer
+import ch.fihlon.moodini.server.business.question.control.VoteService
+import ch.fihlon.moodini.server.business.question.entity.Vote
+import java.io.File
 import javax.inject.Inject
+import javax.validation.Valid
 import javax.ws.rs.GET
 import javax.ws.rs.POST
 import javax.ws.rs.Path
@@ -33,25 +35,23 @@ import javax.ws.rs.core.UriInfo
 @Path("questions/{questionId}/votes")
 @Produces(MediaType.APPLICATION_JSON)
 class VotesResource @Inject
-constructor(private val questionService: QuestionService) {
+constructor(private val voteService: VoteService) {
 
     @POST
-    fun create(@PathParam(QUESTION_ID) questionId: Long,
-               answer: Answer,
+    fun create(@PathParam("questionId") questionId: String,
+               @Valid vote: Vote,
                @Context info: UriInfo): Response {
-        questionService.vote(questionId, answer)
-        val uri = info.absolutePath
+
+        val newVote = voteService.vote(vote.copy(questionId = questionId))
+        val voteId = newVote.voteId
+        val uri = info.absolutePathBuilder.path(File.separator + voteId).build()
         return Response.created(uri).build()
     }
 
     @GET
-    fun read(@PathParam(QUESTION_ID) questionId: Long): Response {
-        val result = questionService.voteResult(questionId)
+    fun read(@PathParam("questionId") questionId: String): Response {
+        val result = voteService.voteResult(questionId)
         return Response.ok(result).build()
-    }
-
-    companion object {
-        private const val QUESTION_ID = "questionId"
     }
 
 }
