@@ -60,12 +60,12 @@
         </style>
         <script>
             var urlPrefix = window.location.href.indexOf('localhost') === -1 ? '' : 'http://localhost:8080';
-            var questionId = 0;
+            var questionId = null;
             var votingActive = false;
 
-            function loadLatestQuestion() {
+            function loadQuestion() {
                 $.ajax({
-                    url: urlPrefix + '/api/questions/latest'
+                    url: urlPrefix + '/api/questions/' + questionId
                 }).done(function (question) {
                     questionId = question.questionId;
                     $('#question').text(question.text);
@@ -74,10 +74,13 @@
                     alert('Error loading the latest question. Will try to fix this problem with a reload of Moodini…');
                     window.location.reload();
                 });
-                setTimeout(loadLatestQuestion, 60000);
             }
             $(function() {
-                loadLatestQuestion();
+                while (questionId === null || questionId.trim().length === 0) {
+                    questionId = prompt('Question ID:')
+                }
+
+                loadQuestion();
 
                 $('div#voting a').click(function() {
                     if (!votingActive) return;
@@ -88,7 +91,7 @@
                     $.ajax({
                         url: urlPrefix + '/api/questions/' + questionId + '/votes',
                         type: 'POST',
-                        data: '{"value":"' + value.toUpperCase() + '"}',
+                        data: '{"answer":"' + value.toUpperCase() + '"}',
                         dataType: 'text',
                         contentType: 'application/json'
                     }).done(function(data, textStatus, jqXHR) {
