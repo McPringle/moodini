@@ -21,8 +21,6 @@ import ch.fihlon.moodini.server.PersistenceManager.createMongoCollection
 import ch.fihlon.moodini.server.business.question.entity.Question
 import org.litote.kmongo.deleteOneById
 import org.litote.kmongo.findOneById
-import org.litote.kmongo.updateOne
-import java.util.ConcurrentModificationException
 import javax.inject.Singleton
 
 /**
@@ -41,23 +39,8 @@ class QuestionService {
      * @return the new [Question]
      */
     fun create(question: Question): Question {
-        val newQuestion = question.copy(questionId = null, version = question.hashCode())
+        val newQuestion = question.copy(questionId = null)
         collection.insertOne(newQuestion)
-        return newQuestion
-    }
-
-    /**
-     * Update the [Question].
-
-     * @param question the updated [Question]
-     * *
-     * @return the updated [Question]
-     */
-    fun update(question: Question): Question {
-        if (question.version != read(question.questionId!!)?.version) throw ConcurrentModificationException(
-                "The question with id '${question.questionId}' was modified concurrently!")
-        val newQuestion = question.copy(version = question.hashCode())
-        collection.updateOne(newQuestion)
         return newQuestion
     }
 
