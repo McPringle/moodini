@@ -89,6 +89,7 @@ sonarqube {
         property 'sonar.links.ci', 'https://travis-ci.org/McPringle/moodini'
         property 'sonar.links.scm', 'https://github.com/McPringle/moodini'
         property 'sonar.links.issue', 'https://github.com/McPringle/moodini/issues'
+        property 'sonar.exclusions', 'src/main/webapp/bower_components/**'
     }
 }
 
