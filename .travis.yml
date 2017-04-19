@@ -14,16 +14,8 @@ cache:
     - '$HOME/.sonar/cache'
     - '$HOME/.sonar/installs'
 
-jdk:
-  - oraclejdk8
-
 services:
   - docker
-
-addons:
-  apt:
-    packages:
-      - oracle-java8-installer
 
 before_install:
   - npm install -g bower
