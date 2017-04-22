@@ -94,6 +94,15 @@ sonarqube {
 }
 
 configurations {
+    all {
+        resolutionStrategy.force "com.fasterxml.jackson.core:jackson-core:$jacksonVersion",
+                "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion",
+                "com.google.code.gson:gson:$gsonVersion",
+                "org.javassist:javassist:$javassistVersion",
+                "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
+                "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        resolutionStrategy.failOnVersionConflict()
+    }
     detekt
 }
 
