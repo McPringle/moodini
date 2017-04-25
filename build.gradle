@@ -29,6 +29,9 @@ apply plugin: 'org.sonarqube'
 
 repositories {
     mavenCentral()
+    maven {
+        url "http://dl.bintray.com/arturbosch/code-analysis"
+    }
 }
 
 buildscript {
