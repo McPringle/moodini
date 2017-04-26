@@ -19,7 +19,6 @@ package ch.fihlon.moodini.server.business.question.control
 
 import ch.fihlon.moodini.server.PersistenceManager.createMongoCollection
 import ch.fihlon.moodini.server.business.question.entity.Answer
-import ch.fihlon.moodini.server.business.question.entity.Question
 import ch.fihlon.moodini.server.business.question.entity.Vote
 import org.litote.kmongo.find
 import org.litote.kmongo.json
