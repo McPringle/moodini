@@ -125,7 +125,6 @@ dependencies {
             "javax:javaee-api:$javaeeApiVersion"
     )
     compile (
-            'org.zalando.phrs:jersey-media-json-gson:0.1'             // Jersey GSON entity providers support
             "io.github.microutils:kotlin-logging:$kotlinLoggingVersion",
             "com.airhacks:jaxrs-cors:$jaxrsCorsVersion",
             "com.google.code.gson:gson:$gsonVersion",
