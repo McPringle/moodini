@@ -40,7 +40,7 @@ object PersistenceManager {
         database = client.getDatabase("moodini")
     }
 
-    inline fun <reified T : Any>  createMongoCollection(): MongoCollection<T> {
+    inline fun <reified T : Any> createMongoCollection(): MongoCollection<T> {
         return database.getCollection<T>()
     }
 
