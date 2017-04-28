@@ -100,7 +100,8 @@ configurations {
                 "com.google.code.gson:gson:$gsonVersion",
                 "org.javassist:javassist:$javassistVersion",
                 "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
-                "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+                "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
+                "org.mockito:mockito-core:$mockitoVersion"
         resolutionStrategy.failOnVersionConflict()
     }
     detekt
@@ -136,7 +137,8 @@ dependencies {
             "org.zalando.phrs:jersey-media-json-gson:$jerseyMediaJsonGsonVersion"
     )
     testCompile (
-            "io.kotlintest:kotlintest:$kotlinTestVersion"
+            "io.kotlintest:kotlintest:$kotlinTestVersion",
+            "com.nhaarman:mockito-kotlin:$mockitoKotlinVersion"
     )
     detekt (
             "io.gitlab.arturbosch.detekt:detekt-cli:$detektVersion",
