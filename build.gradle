@@ -130,7 +130,7 @@ dependencies {
             "com.airhacks:jaxrs-cors:$jaxrsCorsVersion",
             "com.google.code.gson:gson:$gsonVersion",
             "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
-            "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion",
+            "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
             "org.litote.kmongo:kmongo:$kmongoVersion",
             "org.slf4j:slf4j-api:$slf4jVersion",
             "org.slf4j:slf4j-simple:$slf4jVersion",
