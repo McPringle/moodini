@@ -21,6 +21,7 @@ import ch.fihlon.moodini.server.business.question.control.QuestionService
 import ch.fihlon.moodini.server.business.question.entity.Question
 import java.io.File
 import javax.inject.Inject
+import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 import javax.ws.rs.GET
 import javax.ws.rs.POST
@@ -38,8 +39,10 @@ constructor(private val questionService: QuestionService) {
 
     @POST
     fun create(@Valid question: Question,
+               @Context request: HttpServletRequest,
                @Context info: UriInfo): Response {
-        val newQuestion = questionService.create(question)
+        val questionToSave = question.copy(ipAddress = request.remoteAddr)
+        val newQuestion = questionService.create(questionToSave)
         val questionId = newQuestion.questionId
         val uri = info.absolutePathBuilder.path(File.separator + questionId).build()
         return Response.created(uri).build()

@@ -19,4 +19,4 @@ package ch.fihlon.moodini.server.business.question.entity
 
 import org.litote.kmongo.MongoId
 
-data class Question (@MongoId val questionId: String?, val text: String)
+data class Question (@MongoId val questionId: String?, val text: String, val ipAddress:String?)

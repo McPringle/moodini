@@ -24,7 +24,7 @@ import io.kotlintest.specs.StringSpec
 class QuestionTest : StringSpec() {
 
     init {
-        val question = Question("42", "Foobar")
+        val question = Question("42", "Foobar", "127.0.0.1")
 
         "question should be instantiated" {
             question shouldNotBe null
@@ -36,6 +36,10 @@ class QuestionTest : StringSpec() {
 
         "question text should be set" {
             question.text shouldBe "Foobar"
+        }
+
+        "ip address should be set" {
+            question.ipAddress shouldBe "127.0.0.1"
         }
     }
 
