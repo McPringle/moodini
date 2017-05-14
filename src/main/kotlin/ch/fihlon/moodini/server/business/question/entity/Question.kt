@@ -18,5 +18,9 @@
 package ch.fihlon.moodini.server.business.question.entity
 
 import org.litote.kmongo.MongoId
+import java.time.LocalDateTime
 
-data class Question (@MongoId val questionId: String?, val text: String, val ipAddress:String?)
+data class Question (@MongoId val questionId: String?,
+                     val text: String,
+                     val ipAddress: String?,
+                     val created: LocalDateTime?)

@@ -20,11 +20,13 @@ package ch.fihlon.moodini.server.business.question.entity
 import io.kotlintest.matchers.shouldBe
 import io.kotlintest.matchers.shouldNotBe
 import io.kotlintest.specs.StringSpec
+import java.time.LocalDateTime
 
 class QuestionTest : StringSpec() {
 
     init {
-        val question = Question("42", "Foobar", "127.0.0.1")
+        val now = LocalDateTime.now()
+        val question = Question("42", "Foobar", "127.0.0.1", now)
 
         "question should be instantiated" {
             question shouldNotBe null
@@ -40,6 +42,10 @@ class QuestionTest : StringSpec() {
 
         "ip address should be set" {
             question.ipAddress shouldBe "127.0.0.1"
+        }
+
+        "creation date and time should be set" {
+            question.created shouldBe now
         }
     }
 

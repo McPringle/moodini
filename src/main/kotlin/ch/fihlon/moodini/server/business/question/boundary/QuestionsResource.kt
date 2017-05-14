@@ -20,6 +20,7 @@ package ch.fihlon.moodini.server.business.question.boundary
 import ch.fihlon.moodini.server.business.question.control.QuestionService
 import ch.fihlon.moodini.server.business.question.entity.Question
 import java.io.File
+import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
@@ -41,7 +42,7 @@ constructor(private val questionService: QuestionService) {
     fun create(@Valid question: Question,
                @Context request: HttpServletRequest,
                @Context info: UriInfo): Response {
-        val questionToSave = question.copy(ipAddress = request.remoteAddr)
+        val questionToSave = question.copy(ipAddress = request.remoteAddr, created = LocalDateTime.now())
         val newQuestion = questionService.create(questionToSave)
         val questionId = newQuestion.questionId
         val uri = info.absolutePathBuilder.path(File.separator + questionId).build()
