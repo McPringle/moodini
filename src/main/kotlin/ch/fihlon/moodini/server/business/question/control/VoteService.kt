@@ -51,9 +51,9 @@ class VoteService {
      * @return the vote results for this [Question]
      */
     fun voteResult(questionId: String): Map<Answer, Int> {
-        return collection.find("{questionId:${questionId.json}}")
-                .groupBy { it::answer }
-                .mapKeys { (key, _) -> key.get() }
+        return collection
+                .find("{questionId:${questionId.json}}")
+                .groupBy { it::answer.get() }
                 .mapValues { (_, value) -> value.count() }
     }
 
