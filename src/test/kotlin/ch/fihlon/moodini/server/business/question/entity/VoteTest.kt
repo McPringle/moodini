@@ -24,7 +24,7 @@ import io.kotlintest.specs.StringSpec
 class VoteTest : StringSpec() {
 
     init {
-        val vote = Vote("21", "42", Answer.GOOD)
+        val vote = Vote("21", "42", Answer.GOOD, "127.0.0.1")
 
         "vote should be instantiated" {
             vote shouldNotBe null
@@ -40,6 +40,10 @@ class VoteTest : StringSpec() {
 
         "answer should be set" {
             vote.answer shouldBe Answer.GOOD
+        }
+
+        "ip address should be set" {
+            vote.ipAddress shouldBe "127.0.0.1"
         }
     }
 

@@ -21,6 +21,7 @@ import ch.fihlon.moodini.server.business.question.control.VoteService
 import ch.fihlon.moodini.server.business.question.entity.Vote
 import java.io.File
 import javax.inject.Inject
+import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 import javax.ws.rs.GET
 import javax.ws.rs.POST
@@ -40,9 +41,10 @@ constructor(private val voteService: VoteService) {
     @POST
     fun create(@PathParam("questionId") questionId: String,
                @Valid vote: Vote,
+               @Context request: HttpServletRequest,
                @Context info: UriInfo): Response {
-
-        val newVote = voteService.vote(vote.copy(questionId = questionId))
+        val voteToSave = vote.copy(questionId = questionId, ipAddress = request.remoteAddr)
+        val newVote = voteService.vote(voteToSave)
         val voteId = newVote.voteId
         val uri = info.absolutePathBuilder.path(File.separator + voteId).build()
         return Response.created(uri).build()

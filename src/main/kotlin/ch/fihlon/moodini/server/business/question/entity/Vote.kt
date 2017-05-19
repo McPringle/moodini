@@ -19,4 +19,7 @@ package ch.fihlon.moodini.server.business.question.entity
 
 import org.litote.kmongo.MongoId
 
-data class Vote (@MongoId val voteId: String?, val questionId: String, val answer: Answer)
+data class Vote (@MongoId val voteId: String?,
+                 val questionId: String,
+                 val answer: Answer,
+                 val ipAddress: String?)
