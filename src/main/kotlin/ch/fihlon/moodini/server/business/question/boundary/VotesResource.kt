@@ -20,6 +20,7 @@ package ch.fihlon.moodini.server.business.question.boundary
 import ch.fihlon.moodini.server.business.question.control.VoteService
 import ch.fihlon.moodini.server.business.question.entity.Vote
 import java.io.File
+import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
@@ -43,7 +44,7 @@ constructor(private val voteService: VoteService) {
                @Valid vote: Vote,
                @Context request: HttpServletRequest,
                @Context info: UriInfo): Response {
-        val voteToSave = vote.copy(questionId = questionId, ipAddress = request.remoteAddr)
+        val voteToSave = vote.copy(questionId = questionId, ipAddress = request.remoteAddr, created = LocalDateTime.now())
         val newVote = voteService.vote(voteToSave)
         val voteId = newVote.voteId
         val uri = info.absolutePathBuilder.path(File.separator + voteId).build()

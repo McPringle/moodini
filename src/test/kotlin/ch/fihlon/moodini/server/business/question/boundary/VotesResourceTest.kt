@@ -29,6 +29,8 @@ import io.kotlintest.matchers.shouldNotBe
 import io.kotlintest.specs.StringSpec
 import org.mockito.ArgumentMatchers.anyString
 import java.net.URI
+import java.time.LocalDateTime
+import javax.servlet.http.HttpServletRequest
 import javax.ws.rs.core.UriBuilder
 import javax.ws.rs.core.UriInfo
 
@@ -39,6 +41,8 @@ class VotesResourceTest : StringSpec() {
         val voteId = "testVoteId"
         val questionId = "testQuestionId"
         val answer = Answer.GOOD
+        val ipAddress = "127.0.0.1"
+        val created = LocalDateTime.now()
         val voteResult = hashMapOf(
                 Answer.PISSED to 1,
                 Answer.MEH to 2,
@@ -48,7 +52,7 @@ class VotesResourceTest : StringSpec() {
         )
 
         val voteServiceMock = mock<VoteService> {
-            on { vote(any()) } doReturn Vote(voteId, questionId, answer)
+            on { vote(any()) } doReturn Vote(voteId, questionId, answer, ipAddress, created)
             on { voteResult(any()) } doReturn voteResult
         }
 
@@ -62,10 +66,14 @@ class VotesResourceTest : StringSpec() {
             on { absolutePathBuilder } doReturn uriBuilder
         }
 
+        val requestMock = mock<HttpServletRequest> {
+            on { remoteAddr } doReturn ipAddress
+        }
+
         val votesResource = VotesResource(voteServiceMock)
 
         "a new vote can be created" {
-            val response = votesResource.create(questionId, Vote(null, questionId, answer), uriInfoMock)
+            val response = votesResource.create(questionId, Vote(null, questionId, answer, null, null), requestMock, uriInfoMock)
             response shouldNotBe null
             response.status shouldBe 201
             response.location shouldBe uri

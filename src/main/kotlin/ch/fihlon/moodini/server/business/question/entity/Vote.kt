@@ -18,8 +18,10 @@
 package ch.fihlon.moodini.server.business.question.entity
 
 import org.litote.kmongo.MongoId
+import java.time.LocalDateTime
 
 data class Vote (@MongoId val voteId: String?,
                  val questionId: String,
                  val answer: Answer,
-                 val ipAddress: String?)
+                 val ipAddress: String?,
+                 val created: LocalDateTime?)
