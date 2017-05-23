@@ -36,7 +36,10 @@ object PersistenceManager {
         val db_port = System.getenv("db_port")
         val db_name = System.getenv("db_name")
 
-        val mongoClientOptions = MongoClientOptions.builder().connectTimeout(10_000).writeConcern(WriteConcern.W1)
+        val mongoClientOptions = MongoClientOptions.builder()
+                .connectTimeout(10_000)
+                .socketTimeout(10_000)
+                .writeConcern(WriteConcern.W1)
         val db_uri = MongoClientURI("mongodb://${db_username}:${db_password}@${db_host}:${db_port}/${db_name}", mongoClientOptions)
 
         val client = KMongo.createClient(db_uri)
