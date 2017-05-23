@@ -101,7 +101,8 @@ configurations {
                 "org.javassist:javassist:$javassistVersion",
                 "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
                 "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
-                "org.mockito:mockito-core:$mockitoVersion"
+                "org.mockito:mockito-core:$mockitoVersion",
+                "org.mongodb:mongo-java-driver:$mongoDriverVersion"
         resolutionStrategy.failOnVersionConflict()
     }
     detekt
@@ -132,6 +133,7 @@ dependencies {
             "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
             "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
             "org.litote.kmongo:kmongo:$kmongoVersion",
+            "org.mongodb:mongo-java-driver:$mongoDriverVersion",
             "org.slf4j:slf4j-api:$slf4jVersion",
             "org.slf4j:slf4j-simple:$slf4jVersion",
             "org.zalando.phrs:jersey-media-json-gson:$jerseyMediaJsonGsonVersion"
