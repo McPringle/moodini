@@ -24,6 +24,7 @@ buildscript {
         }
     }
     dependencies {
+        classpath "com.github.ben-manes:gradle-versions-plugin:$gradleVersionsVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlinVersion"
@@ -46,6 +47,7 @@ apply plugin: 'war'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'org.sonarqube'
+apply plugin: 'com.github.ben-manes.versions'
 
 repositories {
     mavenCentral()
