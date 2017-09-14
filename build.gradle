@@ -29,12 +29,9 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlinVersion"
         classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:$coverallsGradlePluginVersion"
+        classpath "org.kordamp.gradle:jdeps-gradle-plugin:$jdepsPluginVersion"
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:$sonarqubeGradlePluginVersion"
     }
-}
-
-plugins {
-    id 'org.kordamp.jdeps' version '0.1.0'
 }
 
 group 'ch.fihlon.moodini'
@@ -47,6 +44,7 @@ apply plugin: 'war'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'org.sonarqube'
+apply plugin: 'org.kordamp.jdeps'
 apply plugin: 'com.github.ben-manes.versions'
 
 repositories {
