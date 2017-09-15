@@ -146,7 +146,7 @@ dependencies {
     )
     detekt (
             "io.gitlab.arturbosch.detekt:detekt-cli:$detektVersion",
-            "io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion"
+            "io.gitlab.arturbosch.detekt:detekt-formatting:$detektFormattingVersion"
     )
 }
 
