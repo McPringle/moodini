@@ -17,10 +17,10 @@
  */
 package ch.fihlon.moodini.server.business.question.entity
 
-import org.litote.kmongo.MongoId
+import org.bson.codecs.pojo.annotations.BsonId
 import java.time.LocalDateTime
 
-data class Vote (@MongoId val voteId: String?,
+data class Vote (@BsonId val voteId: String?,
                  val questionId: String,
                  val answer: Answer,
                  val ipAddress: String?,
