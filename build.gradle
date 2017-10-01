@@ -25,6 +25,7 @@ buildscript {
     }
     dependencies {
         classpath "com.github.ben-manes:gradle-versions-plugin:$gradleVersionsVersion"
+        classpath "gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlinVersion"
@@ -43,6 +44,7 @@ apply plugin: 'kotlin-noarg'
 apply plugin: 'war'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
+apply plugin: 'io.gitlab.arturbosch.detekt'
 apply plugin: 'org.sonarqube'
 apply plugin: 'org.kordamp.jdeps'
 apply plugin: 'com.github.ben-manes.versions'
@@ -101,25 +103,20 @@ configurations {
     all {
         resolutionStrategy.failOnVersionConflict()
         resolutionStrategy.force "com.google.code.gson:gson:$gsonVersion",
+                "io.gitlab.arturbosch.detekt:detekt-core:$detektVersion",
+                "org.jetbrains.kotlin:kotlin-compiler-embeddable:$kotlinVersion",
                 "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
                 "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
                 "org.slf4j:slf4j-api:$slf4jVersion"
     }
-    detekt
 }
 
-task detekt(type: JavaExec) {
-    main = "io.gitlab.arturbosch.detekt.cli.Main"
-    classpath = configurations.detekt
-    def input = "$project.projectDir.absolutePath"
-    def filters = ".*test.*"
-    def rulesets = ""
-    def params = [ '-p', input, '-f', filters, '-r', rulesets]
-    args(params)
-}
-
-afterEvaluate {
-    check.dependsOn 'detekt'
+detekt {
+    version = "$detektVersion"
+    profile("main") {
+        input = "$projectDir/src/main/kotlin"
+        filters = ".*test.*,.*/resources/.*,.*/tmp/.*"
+    }
 }
 
 dependencies {
@@ -141,9 +138,4 @@ dependencies {
             "io.kotlintest:kotlintest:$kotlinTestVersion",
             "com.nhaarman:mockito-kotlin:$mockitoKotlinVersion"
     )
-    detekt (
-            "io.gitlab.arturbosch.detekt:detekt-cli:$detektVersion",
-            "io.gitlab.arturbosch.detekt:detekt-formatting:$detektFormattingVersion"
-    )
 }
-
