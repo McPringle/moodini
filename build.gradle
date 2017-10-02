@@ -104,9 +104,11 @@ configurations {
         resolutionStrategy.failOnVersionConflict()
         resolutionStrategy.force "com.google.code.gson:gson:$gsonVersion",
                 "io.gitlab.arturbosch.detekt:detekt-core:$detektVersion",
+                "org.javassist:javassist:$javassistVersion",
                 "org.jetbrains.kotlin:kotlin-compiler-embeddable:$kotlinVersion",
                 "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
                 "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
+                "org.mockito:mockito-core:$mockitoVersion",
                 "org.slf4j:slf4j-api:$slf4jVersion"
     }
 }
