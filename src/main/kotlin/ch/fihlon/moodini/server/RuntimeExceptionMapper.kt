@@ -45,19 +45,18 @@ class RuntimeExceptionMapper : ExceptionMapper<RuntimeException> {
     private fun handleException(throwable: Throwable?): Response {
         val response: Response
 
-        if (throwable is ConcurrentModificationException) {
-            response = createResponse(CONFLICT, throwable.message!!)
-        } else if (throwable is NotFoundException) {
-            response = createResponse(NOT_FOUND, throwable.message!!)
-        } else if (throwable is UnsupportedOperationException) {
-            response = createResponse(METHOD_NOT_ALLOWED, throwable.message!!)
-        } else if (throwable is WebApplicationException) {
-            val wae = throwable
-            response = createResponse(Response.Status.fromStatusCode(wae.response.status), wae.message!!)
-        } else if (throwable?.cause == null) {
-            response = createResponse(INTERNAL_SERVER_ERROR, throwable?.message!!)
-        } else {
-            response = handleException(throwable.cause!!)
+        when (throwable) {
+            is ConcurrentModificationException -> response = createResponse(CONFLICT, throwable.message!!)
+            is NotFoundException -> response = createResponse(NOT_FOUND, throwable.message!!)
+            is UnsupportedOperationException -> response = createResponse(METHOD_NOT_ALLOWED, throwable.message!!)
+            is WebApplicationException -> response = createResponse(Response.Status.fromStatusCode(throwable.response.status), throwable.message!!)
+            else -> {
+                if (throwable?.cause == null) {
+                    response = createResponse(INTERNAL_SERVER_ERROR, throwable?.message!!)
+                } else {
+                    response = handleException(throwable.cause!!)
+                }
+            }
         }
 
         return response
