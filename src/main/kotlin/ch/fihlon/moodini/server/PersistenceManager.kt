@@ -40,7 +40,8 @@ object PersistenceManager {
                 .connectTimeout(10_000)
                 .socketTimeout(10_000)
                 .writeConcern(WriteConcern.W1)
-        val db_uri = MongoClientURI("mongodb://${db_username}:${db_password}@${db_host}:${db_port}/${db_name}", mongoClientOptions)
+        val db_uri = MongoClientURI("mongodb://${db_username}:${db_password}@${db_host}:${db_port}/${db_name}",
+                mongoClientOptions)
 
         val client = KMongo.createClient(db_uri)
 

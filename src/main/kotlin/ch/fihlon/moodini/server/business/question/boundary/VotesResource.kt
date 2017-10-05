@@ -44,7 +44,10 @@ constructor(private val voteService: VoteService) {
                @Valid vote: Vote,
                @Context request: HttpServletRequest,
                @Context info: UriInfo): Response {
-        val voteToSave = vote.copy(questionId = questionId, ipAddress = request.remoteAddr, created = LocalDateTime.now())
+        val voteToSave = vote.copy(
+                questionId = questionId,
+                ipAddress = request.remoteAddr,
+                created = LocalDateTime.now())
         val newVote = voteService.vote(voteToSave)
         val voteId = newVote.voteId
         val uri = info.absolutePathBuilder.path(File.separator + voteId).build()
