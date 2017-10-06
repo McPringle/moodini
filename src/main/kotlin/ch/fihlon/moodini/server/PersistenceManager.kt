@@ -30,20 +30,20 @@ object PersistenceManager {
     val database: MongoDatabase
 
     init {
-        val db_username = System.getenv("db_username")
-        val db_password = System.getenv("db_password")
-        val db_host = System.getenv("db_host")
-        val db_port = System.getenv("db_port")
-        val db_name = System.getenv("db_name")
+        val dbUsername = System.getenv("db_username")
+        val dbPassword = System.getenv("db_password")
+        val dbHost = System.getenv("db_host")
+        val dbPort = System.getenv("db_port")
+        val dbName = System.getenv("db_name")
 
         val mongoClientOptions = MongoClientOptions.builder()
                 .connectTimeout(10_000)
                 .socketTimeout(10_000)
                 .writeConcern(WriteConcern.W1)
-        val db_uri = MongoClientURI("mongodb://${db_username}:${db_password}@${db_host}:${db_port}/${db_name}",
+        val dbURI = MongoClientURI("mongodb://${dbUsername}:${dbPassword}@${dbHost}:${dbPort}/${dbName}",
                 mongoClientOptions)
 
-        val client = KMongo.createClient(db_uri)
+        val client = KMongo.createClient(dbURI)
 
         database = client.getDatabase("moodini")
     }
