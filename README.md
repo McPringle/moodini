@@ -28,3 +28,7 @@ You should have received a copy of the GNU Affero General Public License along w
 ## Throughput
 
 [![Throughput Graph](https://graphs.waffle.io/mcpringle/moodini/throughput.svg)](https://waffle.io/mcpringle/moodini/metrics/throughput)
+
+## With support from
+
+[![JWT Auth for open source projects](https://cdn.auth0.com/oss/badges/a0-badge-light.png)](https://auth0.com/?utm_source=oss&utm_medium=gp&utm_campaign=oss)
