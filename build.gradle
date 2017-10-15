@@ -102,7 +102,9 @@ sonarqube {
 configurations {
     all {
         resolutionStrategy.failOnVersionConflict()
-        resolutionStrategy.force "com.google.code.gson:gson:$gsonVersion",
+        resolutionStrategy.force "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion",
+                "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion",
+                "com.google.code.gson:gson:$gsonVersion",
                 "io.gitlab.arturbosch.detekt:detekt-core:$detektVersion",
                 "org.javassist:javassist:$javassistVersion",
                 "org.jetbrains.kotlin:kotlin-compiler-embeddable:$kotlinVersion",
