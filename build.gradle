@@ -110,7 +110,6 @@ configurations {
                 "org.jetbrains.kotlin:kotlin-compiler-embeddable:$kotlinVersion",
                 "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
                 "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
-                "org.mockito:mockito-core:$mockitoVersion",
                 "org.slf4j:slf4j-api:$slf4jVersion"
     }
 }
@@ -139,7 +138,6 @@ dependencies {
             "org.zalando.phrs:jersey-media-json-gson:$jerseyMediaJsonGsonVersion"
     )
     testCompile (
-            "io.kotlintest:kotlintest:$kotlinTestVersion",
-            "com.nhaarman:mockito-kotlin:$mockitoKotlinVersion"
+            "io.kotlintest:kotlintest:$kotlinTestVersion"
     )
 }
