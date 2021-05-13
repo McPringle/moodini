@@ -20,7 +20,7 @@ services:
 before_install:
   - npm install -g bower
   - bower install -p
-  - ./gradlew check jacocoTestReport dependencyUpdates detektCheck sonarqube -Dsonar.login=$SONAR_TOKEN
+  - ./gradlew check jacocoTestReport dependencyUpdates detekt sonarqube -Dsonar.login=$SONAR_TOKEN
   - docker build -t mcpringle/moodini .
   - docker login -u $DOCKER_USER -p $DOCKER_PASS
   - docker push mcpringle/moodini
