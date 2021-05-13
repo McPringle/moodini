@@ -26,4 +26,4 @@ before_install:
   - docker logout
 
 script:
-  - ./gradlew check jacocoTestReport dependencyUpdates detektCheck sonarqube -Dsonar.login=$SONAR_TOKEN
+  - ./gradlew assemble check jacocoTestReport dependencyUpdates detektCheck sonarqube -Dsonar.login=$SONAR_TOKEN
