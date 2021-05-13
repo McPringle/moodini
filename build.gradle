@@ -18,17 +18,15 @@
 
 buildscript {
     repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
+        gradlePluginPortal()
     }
     dependencies {
         classpath "com.github.ben-manes:gradle-versions-plugin:$gradleVersionsVersion"
-        classpath "gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektVersion"
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlinVersion"
-        classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:$coverallsGradlePluginVersion"
+        classpath "gradle.plugin.org.kt3k.gradle.plugin:coveralls-gradle-plugin:$coverallsGradlePluginVersion"
         classpath "org.kordamp.gradle:jdeps-gradle-plugin:$jdepsPluginVersion"
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:$sonarqubeGradlePluginVersion"
     }
@@ -45,7 +43,7 @@ apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'io.gitlab.arturbosch.detekt'
 apply plugin: 'org.sonarqube'
-apply plugin: 'org.kordamp.jdeps'
+apply plugin: 'org.kordamp.gradle.jdeps'
 apply plugin: 'com.github.ben-manes.versions'
 
 repositories {
@@ -104,22 +102,22 @@ configurations {
         resolutionStrategy.failOnVersionConflict()
         resolutionStrategy.force "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion",
                 "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion",
+                "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion",
                 "com.google.code.gson:gson:$gsonVersion",
                 "io.gitlab.arturbosch.detekt:detekt-core:$detektVersion",
+                "junit:junit:$junitVersion",
                 "org.javassist:javassist:$javassistVersion",
                 "org.jetbrains.kotlin:kotlin-compiler-embeddable:$kotlinVersion",
                 "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
                 "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
+                "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlinVersion",
                 "org.slf4j:slf4j-api:$slf4jVersion"
     }
 }
 
 detekt {
-    version = "$detektVersion"
-    profile("main") {
-        input = "$projectDir/src/main/kotlin"
-        filters = ".*test.*,.*/resources/.*,.*/tmp/.*"
-    }
+    toolVersion = "$detektVersion"
+    input = files("src/main/kotlin")
 }
 
 dependencies {
