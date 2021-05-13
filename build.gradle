@@ -28,7 +28,6 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlinVersion"
         classpath "gradle.plugin.org.kt3k.gradle.plugin:coveralls-gradle-plugin:$coverallsGradlePluginVersion"
         classpath "org.kordamp.gradle:jdeps-gradle-plugin:$jdepsPluginVersion"
-        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:$sonarqubeGradlePluginVersion"
     }
 }
 
@@ -42,7 +41,6 @@ apply plugin: 'war'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'io.gitlab.arturbosch.detekt'
-apply plugin: 'org.sonarqube'
 apply plugin: 'org.kordamp.gradle.jdeps'
 apply plugin: 'com.github.ben-manes.versions'
 
@@ -74,26 +72,6 @@ jacocoTestReport {
         xml.enabled = true // coveralls plugin depends on xml format report
         html.enabled = true
         csv.enabled = true
-    }
-}
-
-sonarqube {
-    properties {
-        property 'sonar.host.url', 'https://sonarqube.com'
-        property 'sonar.projectKey', 'mcpringle:moodini'
-        property 'sonar.projectName', 'Moodini'
-        property 'sonar.projectVersion', '1.0'
-        property 'sonar.sources', 'src/main'
-        property 'sonar.java.source', '8'
-        property 'sonar.sourceEncoding', 'UTF-8'
-        property 'sonar.junit.reportsPath', 'build/test-results/test'
-        property 'sonar.jacoco.reportPaths', 'build/jacoco/test.exec'
-        property 'sonar.github.repository', 'McPringle/moodini'
-        property 'sonar.links.homepage', 'https://www.moodini.ch/'
-        property 'sonar.links.ci', 'https://travis-ci.org/McPringle/moodini'
-        property 'sonar.links.scm', 'https://github.com/McPringle/moodini'
-        property 'sonar.links.issue', 'https://github.com/McPringle/moodini/issues'
-        property 'sonar.exclusions', 'src/main/webapp/bower_components/**'
     }
 }
 
