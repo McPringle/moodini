@@ -29,6 +29,8 @@ object PersistenceManager {
 
     val database: MongoDatabase
 
+    private const val MONGODB_TIMEOUT = 10_000
+
     init {
         val dbUsername = System.getenv("db_username")
         val dbPassword = System.getenv("db_password")
@@ -37,8 +39,8 @@ object PersistenceManager {
         val dbName = System.getenv("db_name")
 
         val mongoClientOptions = MongoClientOptions.builder()
-                .connectTimeout(10_000)
-                .socketTimeout(10_000)
+                .connectTimeout(MONGODB_TIMEOUT)
+                .socketTimeout(MONGODB_TIMEOUT)
                 .writeConcern(WriteConcern.W1)
         val dbURI = MongoClientURI("mongodb://${dbUsername}:${dbPassword}@${dbHost}:${dbPort}/${dbName}",
                 mongoClientOptions)
