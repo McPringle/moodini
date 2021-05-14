@@ -15,6 +15,7 @@ cache:
 addons:
   apt:
     packages:
+      - libsecret-1-dev
       - pass
 
 services:
