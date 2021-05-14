@@ -1,0 +1,7 @@
+#!/bin/bash
+set -x
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt update
+sudo apt -y install docker-ce pass
+echo 'DOCKER_OPTS="--experimental"' | sudo tee /etc/default/docker
+sudo service docker restart

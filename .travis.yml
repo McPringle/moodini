@@ -16,6 +16,8 @@ services:
   - docker
 
 before_install:
+  - bash travis/update-docker
+  - bash travis/init-credential-store
   - npm install -g bower
   - bower install -p
 
@@ -27,6 +29,6 @@ script:
 
 deploy:
   provider: script
-  script: bash deploy
+  script: bash travis/push-to-docker
   on:
     branch: master
