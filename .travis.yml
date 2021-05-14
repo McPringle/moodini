@@ -19,6 +19,7 @@ before_install:
   - npm install -g bower
   - bower install -p
   - ./gradlew check jacocoTestReport dependencyUpdates detekt assemble
+  - docker build -t mcpringle/moodini .
 
 deploy:
   provider: script

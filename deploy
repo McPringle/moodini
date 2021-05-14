@@ -1,5 +1,4 @@
 #!/bin/bash
-docker build -t mcpringle/moodini .
 echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
 docker push mcpringle/moodini
 docker logout
