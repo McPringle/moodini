@@ -12,12 +12,6 @@ cache:
     - '$HOME/.gradle/wrapper'
     - '$HOME/.m2/repository'
 
-addons:
-  apt:
-    packages:
-      - libsecret-1-dev
-      - pass
-
 services:
   - docker
 
