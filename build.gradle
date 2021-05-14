@@ -51,6 +51,14 @@ repositories {
     }
 }
 
+compileKotlin {
+    kotlinOptions.jvmTarget = "$javaVersion"
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "$javaVersion"
+}
+
 allOpen {
     annotation('javax.ejb.Stateless')
     annotation('javax.ws.rs.Path')

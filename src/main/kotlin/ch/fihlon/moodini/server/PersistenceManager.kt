@@ -17,9 +17,6 @@
  */
 package ch.fihlon.moodini.server
 
-import com.mongodb.MongoClientOptions
-import com.mongodb.MongoClientURI
-import com.mongodb.WriteConcern
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
 import org.litote.kmongo.KMongo
@@ -29,8 +26,6 @@ object PersistenceManager {
 
     val database: MongoDatabase
 
-    private const val MONGODB_TIMEOUT = 10_000
-
     init {
         val dbUsername = System.getenv("db_username")
         val dbPassword = System.getenv("db_password")
@@ -38,12 +33,7 @@ object PersistenceManager {
         val dbPort = System.getenv("db_port")
         val dbName = System.getenv("db_name")
 
-        val mongoClientOptions = MongoClientOptions.builder()
-                .connectTimeout(MONGODB_TIMEOUT)
-                .socketTimeout(MONGODB_TIMEOUT)
-                .writeConcern(WriteConcern.W1)
-        val dbURI = MongoClientURI("mongodb://${dbUsername}:${dbPassword}@${dbHost}:${dbPort}/${dbName}",
-                mongoClientOptions)
+        val dbURI = "mongodb://${dbUsername}:${dbPassword}@${dbHost}:${dbPort}/${dbName}"
 
         val client = KMongo.createClient(dbURI)
 
