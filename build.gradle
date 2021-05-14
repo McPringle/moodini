@@ -79,10 +79,6 @@ war {
     archiveFileName = 'moodini.war'
 }
 
-jdepsReport {
-    configurations = ['runtimeClasspath']
-}
-
 jacoco {
     toolVersion = "$jacocoVersion"
 }
