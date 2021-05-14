@@ -64,6 +64,10 @@ war {
     archiveFileName = 'moodini.war'
 }
 
+jacoco {
+    toolVersion = "$jacocoVersion"
+}
+
 jacocoTestReport {
     group = 'Reporting'
     description = 'Generate Jacoco coverage reports after running tests.'
