@@ -12,6 +12,11 @@ cache:
     - '$HOME/.gradle/wrapper'
     - '$HOME/.m2/repository'
 
+addons:
+  apt:
+    packages:
+      - pass
+
 services:
   - docker
 
@@ -19,7 +24,7 @@ before_install:
   - npm install -g bower
   - bower install -p
 
-install: true
+install: skip
 
 script:
   - ./gradlew check jacocoTestReport dependencyUpdates detekt build assemble --scan -s
