@@ -20,6 +20,7 @@ addons:
 
 services:
   - docker
+  - xvfb
 
 before_install:
   - npm install -g bower
